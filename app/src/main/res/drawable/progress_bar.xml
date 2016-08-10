@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ MIT License
   ~
@@ -22,30 +23,24 @@
   ~ SOFTWARE.
   -->
 
-<resources>
+<rotate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromDegrees="90"
+    android:pivotX="50%"
+    android:pivotY="50%"
+    android:toDegrees="360">
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
+    <shape
+        android:innerRadiusRatio="3"
+        android:shape="ring"
+        android:thicknessRatio="7.0">
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
+        <gradient
+            android:angle="0"
+            android:centerColor="#007DD6"
+            android:endColor="#007DD6"
+            android:startColor="#007DD6"
+            android:type="sweep"
+            android:useLevel="false" />
+    </shape>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <!-- Empty TextView when there is nothing in RecyclerView -->
-    <style name="EmptyListInfo">
-        <item name="android:textAppearance">?android:textAppearance</item>
-        <item name="android:textSize">@dimen/news_text_size</item>
-        <item name="android:padding">@dimen/list_item_padding</item>
-    </style>
-
-</resources>
+</rotate>

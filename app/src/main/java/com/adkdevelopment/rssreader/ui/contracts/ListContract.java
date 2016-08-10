@@ -22,18 +22,28 @@
  * SOFTWARE.
  */
 
-package com.adkdevelopment.rssreader.ui.presenters;
+package com.adkdevelopment.rssreader.ui.contracts;
 
-import com.adkdevelopment.rssreader.ui.base.BaseMvpPresenter;
-import com.adkdevelopment.rssreader.ui.contracts.MainContract;
+import com.adkdevelopment.rssreader.data.local.NewsRealm;
+import com.adkdevelopment.rssreader.ui.base.MvpPresenter;
+import com.adkdevelopment.rssreader.ui.base.MvpView;
+
+import java.util.List;
 
 /**
- * Presenter for the MainActivity.
+ * MVP Contract for a ListFragment.
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class MainPresenter extends BaseMvpPresenter<MainContract.View>
-        implements MainContract.Presenter {
+public class ListContract {
+    public interface Presenter extends MvpPresenter<View> {
+        List<NewsRealm> getData();
+        void fetchData();
+    }
 
-    private static final String TAG = MainPresenter.class.getSimpleName();
-
+    public interface View extends MvpView {
+        void showData(List<NewsRealm> itemList);
+        void showEmpty();
+        void showError();
+        void showProgress(boolean isInProgress);
+    }
 }

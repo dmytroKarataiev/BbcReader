@@ -24,6 +24,7 @@
 
 package com.adkdevelopment.rssreader.utils;
 
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
@@ -76,5 +77,15 @@ public class Utilities {
         newsItem.setWidth(Integer.parseInt(item.getThumbnail().getWidth()));
         newsItem.setHeight(Integer.parseInt(item.getThumbnail().getHeight()));
         return newsItem;
+    }
+
+    /**
+     * Returns formatted relative data
+     * @param millis date to format in milliseconds
+     * @return String with relative date (ex: 7 days ago)
+     */
+    public static String getRelativeDate(Long millis) {
+        Date date = new Date(millis);
+        return DateUtils.getRelativeTimeSpanString(date.getTime()).toString();
     }
 }

@@ -34,14 +34,10 @@ import com.adkdevelopment.rssreader.ui.base.MvpView;
 public class MainContract {
 
     public interface Presenter extends MvpPresenter<View> {
-        void getData();
-        void fetchData();
+
     }
 
     public interface View extends MvpView {
-        // TODO: add model class
-        void showData();
-        void showEmpty();
-        void showError();
+
     }
 }

@@ -24,7 +24,8 @@
 
 package com.adkdevelopment.rssreader.ui.base;
 
-import android.app.Fragment;
+
+import android.support.v4.app.Fragment;
 
 /**
  * Base for every Fragment in the App.

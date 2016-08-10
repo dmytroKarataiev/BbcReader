@@ -27,11 +27,13 @@ package com.adkdevelopment.rssreader.data.managers;
 import android.content.Context;
 
 import com.adkdevelopment.rssreader.data.contracts.Manager;
+import com.adkdevelopment.rssreader.data.local.NewsRealm;
 
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.Sort;
 
 /**
  * Datamanager to perform all Database-related work.
@@ -57,8 +59,9 @@ public class DataManager implements Manager.DataManager {
 
     /**
      * Add RealmObjects to the Database.
+     *
      * @param model object to add
-     * @param <T> type of the object
+     * @param <T>   type of the object
      * @return added RealmObject.
      */
     public <T extends RealmObject> T add(T model) {
@@ -70,19 +73,21 @@ public class DataManager implements Manager.DataManager {
 
     /**
      * Returns all objects matching to the class parameter
+     *
      * @param clazz class of the object
-     * @param <T> type of of the object
+     * @param <T>   type of of the object
      * @return all matching elements
      */
     public <T extends RealmObject> List<T> findAll(Class<T> clazz) {
-        return mRealm.where(clazz).findAll();
+        return mRealm.where(clazz).findAll().sort(NewsRealm.PUBDATE, Sort.DESCENDING);
     }
 
     /**
      * Returns all matching objects to the query parameter
+     *
      * @param clazz which we are looking for
      * @param query to find all matching objects to.
-     * @param <T> type of the object
+     * @param <T>   type of the object
      * @return all objects containing query
      */
     public <T extends RealmObject> List<T> search(Class<T> clazz, String query) {

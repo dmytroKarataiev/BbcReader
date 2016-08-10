@@ -36,8 +36,7 @@ import com.adkdevelopment.rssreader.ui.presenters.MainPresenter;
  * Main class to start the App. Determines whether we have a phone or a tablet.
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class MainActivity extends BaseActivity
-        implements MainContract.View, ListFragment.OnFragmentInteractionListener {
+public class MainActivity extends BaseActivity implements MainContract.View {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -50,33 +49,11 @@ public class MainActivity extends BaseActivity
 
         mPresenter = new MainPresenter();
         mPresenter.attachView(this);
-
-        mPresenter.fetchData();
-    }
-
-    @Override
-    public void showData() {
-
-    }
-
-    @Override
-    public void showEmpty() {
-
-    }
-
-    @Override
-    public void showError() {
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 }

@@ -36,9 +36,12 @@ import io.realm.annotations.PrimaryKey;
  */
 public class NewsRealm extends RealmObject implements Parcelable {
 
-    @PrimaryKey
+    public static final String PUBDATE = "pubDate";
+    public static final String TITLE = "title";
+
     private long pubDate;
 
+    @PrimaryKey
     private String title;
 
     private String description;
@@ -50,6 +53,8 @@ public class NewsRealm extends RealmObject implements Parcelable {
     private int width;
 
     private int height;
+
+    public static final int THUMBNAIL_SIZE = 400;
 
     public long getPubDate() {
         return pubDate;

@@ -28,5 +28,16 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="news_text_size">16sp</dimen>
+    <dimen name="list_item_padding">8dp</dimen>
+    <dimen name="padding_default">16dp</dimen>
+    <dimen name="progressbar_height">150dp</dimen>
+
+    <!-- News Item dimensions -->
+    <dimen name="cardview_height">80dp</dimen>
+    <dimen name="cardview_task_padding">8dp</dimen>
+    <dimen name="cardview_corner_radius">4dp</dimen>
+    <dimen name="news_image_size">100dp</dimen>
+    <dimen name="news_item_padding">4dp</dimen>
 
 </resources>
