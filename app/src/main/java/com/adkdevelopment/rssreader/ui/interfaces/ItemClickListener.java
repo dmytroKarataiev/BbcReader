@@ -22,35 +22,12 @@
  * SOFTWARE.
  */
 
-package com.adkdevelopment.rssreader.data.contracts;
-
-import android.content.Context;
-import android.content.SharedPreferences;
+package com.adkdevelopment.rssreader.ui.interfaces;
 
 /**
- * Contract for all managers in the app.
+ * Controls clicks in fragments
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public interface Manager {
-
-    void init(Context context);
-
-    void clear();
-
-    /**
-     * SharedPreferences manager.
-     */
-    interface PrefsManager extends Manager {
-
-        SharedPreferences getSharedPrefs();
-
-    }
-
-    /**
-     * Manages all model-related issues: data fetching, database work,
-     * retrieval of information.
-     */
-    interface DataManager extends Manager {
-
-    }
+public interface ItemClickListener<M, V> {
+    void onItemClicked(M item, V view);
 }

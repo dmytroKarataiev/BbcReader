@@ -25,8 +25,14 @@
 package com.adkdevelopment.rssreader;
 
 import android.app.Application;
+import android.content.Context;
 
-import com.adkdevelopment.rssreader.data.ApiManager;
+import com.adkdevelopment.rssreader.data.managers.ApiManager;
+import com.adkdevelopment.rssreader.data.managers.DataManager;
+import com.adkdevelopment.rssreader.data.managers.PreferenceManager;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * Custom App class to init all the needed components. Instantiated through the Manifest.
@@ -34,12 +40,72 @@ import com.adkdevelopment.rssreader.data.ApiManager;
  */
 public class App extends Application {
 
-    private static ApiManager sApiManager;
+    private static Context sContext;
 
+    private static DataManager sDataManager;
+    private static ApiManager sApiManager;
+    private static PreferenceManager sSharedPrefManager;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        sContext = getApplicationContext();
+        setupRealmDefaultInstance();
+    }
+
+    /**
+     * Lazy initialisation of an Api Manager.
+     * @return ApiManager
+     */
     public static ApiManager getApiManager() {
         if (sApiManager == null) {
             sApiManager = new ApiManager();
         }
         return sApiManager;
     }
+
+    /**
+     * Lazy initialisation of an Shared Preferences Manager.
+     * @return SharedPreferencesManager.
+     */
+    public static PreferenceManager getSharedPrefManager() {
+        if (sSharedPrefManager == null) {
+            sSharedPrefManager = new PreferenceManager();
+            sSharedPrefManager.init(getContext());
+        }
+        return sSharedPrefManager;
+    }
+
+    /**
+     * Lazy initialisation of an DataManager.
+     * @return DataManager.
+     */
+    public static DataManager getDataManager() {
+        if (sDataManager == null) {
+            sDataManager = new DataManager();
+            sDataManager.init(getContext());
+        }
+        return sDataManager;
+    }
+
+    /**
+     * Sets up database, deletes on changes.
+     * We can possibly improve this part by adding migration rules in the production-ready app.
+     */
+    private static void setupRealmDefaultInstance() {
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(sContext)
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(realmConfig);
+    }
+
+    /**
+     * Method to get App context.
+     * @return Context of the App.
+     */
+    public static Context getContext() {
+        return sContext;
+    }
+
+
 }

@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
-package com.adkdevelopment.rssreader.data;
+package com.adkdevelopment.rssreader.data.managers;
+
+import com.adkdevelopment.rssreader.data.RssService;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;

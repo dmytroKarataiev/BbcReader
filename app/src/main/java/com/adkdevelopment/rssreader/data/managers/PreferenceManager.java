@@ -22,61 +22,39 @@
  * SOFTWARE.
  */
 
-package com.adkdevelopment.rssreader.ui;
+package com.adkdevelopment.rssreader.data.managers;
 
-import android.net.Uri;
-import android.os.Bundle;
+import android.content.Context;
+import android.content.SharedPreferences;
 
-import com.adkdevelopment.rssreader.R;
-import com.adkdevelopment.rssreader.ui.base.BaseActivity;
-import com.adkdevelopment.rssreader.ui.contracts.MainContract;
-import com.adkdevelopment.rssreader.ui.presenters.MainPresenter;
+import com.adkdevelopment.rssreader.data.contracts.Manager;
 
 /**
- * Main class to start the App. Determines whether we have a phone or a tablet.
+ * SharedPreferences manager.
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class MainActivity extends BaseActivity
-        implements MainContract.View, ListFragment.OnFragmentInteractionListener {
+public class PreferenceManager implements Manager.PrefsManager {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static SharedPreferences sPref;
+    private static Context sContext;
 
-    private MainPresenter mPresenter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        mPresenter = new MainPresenter();
-        mPresenter.attachView(this);
-
-        mPresenter.fetchData();
-    }
-
-    @Override
-    public void showData() {
+    public PreferenceManager() {
 
     }
 
     @Override
-    public void showEmpty() {
-
+    public void init(Context context) {
+        sPref = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
+        sContext = context;
     }
 
     @Override
-    public void showError() {
-
+    public void clear() {
+        sPref.edit().clear().apply();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.detachView();
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public SharedPreferences getSharedPrefs() {
+        return sPref;
     }
 }

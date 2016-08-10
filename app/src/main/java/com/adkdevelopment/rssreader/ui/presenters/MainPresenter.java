@@ -27,9 +27,12 @@ package com.adkdevelopment.rssreader.ui.presenters;
 import android.util.Log;
 
 import com.adkdevelopment.rssreader.App;
+import com.adkdevelopment.rssreader.data.local.NewsRealm;
+import com.adkdevelopment.rssreader.data.remote.Item;
 import com.adkdevelopment.rssreader.data.remote.Rss;
 import com.adkdevelopment.rssreader.ui.base.BaseMvpPresenter;
 import com.adkdevelopment.rssreader.ui.contracts.MainContract;
+import com.adkdevelopment.rssreader.utils.Utilities;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -71,6 +74,10 @@ public class MainPresenter extends BaseMvpPresenter<MainContract.View>
                     @Override
                     public void onNext(Rss rss) {
                         Log.d(TAG, "rss.getChannel().getItem().size():" + rss.getChannel().getItem().size());
+                        for (Item each : rss.getChannel().getItem()) {
+                            App.getDataManager().add(Utilities.convertNews(each));
+                            Log.d(TAG, "App.getDataManager().findAll(NewsItem.class).size():" + App.getDataManager().findAll(NewsRealm.class).size());
+                        }
                     }
                 });
     }
