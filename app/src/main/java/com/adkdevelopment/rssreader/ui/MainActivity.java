@@ -22,61 +22,54 @@
  * SOFTWARE.
  */
 
-package com.adkdevelopment.rssreader;
+package com.adkdevelopment.rssreader.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import com.adkdevelopment.rssreader.data.remote.Rss;
-
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import com.adkdevelopment.rssreader.R;
+import com.adkdevelopment.rssreader.ui.base.BaseActivity;
+import com.adkdevelopment.rssreader.ui.contracts.MainContract;
+import com.adkdevelopment.rssreader.ui.presenters.MainPresenter;
 
 /**
  * Main class to start the App. Determines whether we have a phone or a tablet.
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity implements MainContract.View {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private Subscription mSubscription;
+    private MainPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSubscription = App.getApiManager().getNewsService().getNews()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Rss>() {
-                    @Override
-                    public void onCompleted() {
+        mPresenter = new MainPresenter();
+        mPresenter.attachView(this);
 
-                    }
+        mPresenter.fetchData();
+    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "e:" + e);
-                    }
+    @Override
+    public void showData() {
 
-                    @Override
-                    public void onNext(Rss rss) {
-                        Log.d(TAG, "rss.getChannel().getItem().size():" + rss.getChannel().getItem().size());
-                    }
-                });
+    }
+
+    @Override
+    public void showEmpty() {
+
+    }
+
+    @Override
+    public void showError() {
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
-        }
+        mPresenter.detachView();
     }
 }
