@@ -24,11 +24,14 @@
 
 package com.adkdevelopment.rssreader.ui;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 
 import com.adkdevelopment.rssreader.R;
@@ -89,7 +92,6 @@ public class MainActivity extends BaseActivity
         }
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -102,7 +104,17 @@ public class MainActivity extends BaseActivity
         if (!mTwoPane) {
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(NewsRealm.NEWS_EXTRA, item);
-            startActivity(intent);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Pair pair = Pair.create(view.findViewById(R.id.task_item_card),
+                        view.findViewById(R.id.task_item_card).getTransitionName());
+                Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this, pair)
+                        .toBundle();
+
+                startActivity(intent, bundle);
+            } else {
+                startActivity(intent);
+            }
         }
     }
 }

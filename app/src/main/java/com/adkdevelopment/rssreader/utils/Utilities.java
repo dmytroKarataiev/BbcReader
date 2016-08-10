@@ -24,9 +24,16 @@
 
 package com.adkdevelopment.rssreader.utils;
 
+import android.animation.Animator;
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.ViewAnimationUtils;
 
+import com.adkdevelopment.rssreader.R;
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.data.remote.Item;
 
@@ -87,5 +94,55 @@ public class Utilities {
     public static String getRelativeDate(Long millis) {
         Date date = new Date(millis);
         return DateUtils.getRelativeTimeSpanString(date.getTime()).toString();
+    }
+
+    public static int sBlueColor;
+    public static int sWhiteColor;
+
+    /**
+     * Animates RecyclerView card on click with revealing effect
+     * @param viewHolder to make animation on
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void animationCard(RecyclerView.ViewHolder viewHolder) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (sBlueColor == 0) {
+                sBlueColor = ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.colorPrimary);
+            }
+            if (sWhiteColor == 0) {
+                sWhiteColor = ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.white);
+            }
+
+            int finalRadius = (int) Math.hypot(viewHolder.itemView.getWidth() / 2, viewHolder.itemView.getHeight() / 2);
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(viewHolder.itemView,
+                    viewHolder.itemView.getWidth() / 2,
+                    viewHolder.itemView.getHeight() / 2, 0, finalRadius);
+
+            viewHolder.itemView.setBackgroundColor(sBlueColor);
+            anim.start();
+            anim.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    viewHolder.itemView.setBackgroundColor(sWhiteColor);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+        }
+
     }
 }

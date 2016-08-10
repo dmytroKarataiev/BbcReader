@@ -33,8 +33,11 @@ import com.adkdevelopment.rssreader.R;
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.ui.interfaces.ItemClickListener;
 import com.adkdevelopment.rssreader.ui.viewholders.ListViewHolder;
+import com.adkdevelopment.rssreader.utils.Utilities;
 
 import java.util.List;
+
+import butterknife.internal.Utils;
 
 /**
  * Adapter to show all news in a RecyclerView.
@@ -66,6 +69,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         viewHolder.setData(mNews.get(position));
         viewHolder.itemView.setOnClickListener(v -> {
             if (mListener != null) {
+                Utilities.animationCard(viewHolder);
                 mListener.onItemClicked(mNews.get(pos), viewHolder.itemView);
             }
         });
