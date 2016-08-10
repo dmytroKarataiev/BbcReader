@@ -27,21 +27,24 @@ package com.adkdevelopment.rssreader.data.managers;
 import android.content.Context;
 
 import com.adkdevelopment.rssreader.data.contracts.Manager;
+import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.Sort;
 import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Datamanager to perform all Database-related work.
  * Created by Dmytro Karataiev on 8/10/16.
  */
 public class DataManager implements Manager.DataManager {
+
+    private static final String TAG = DataManager.class.getSimpleName();
 
     private Realm mRealm;
 
@@ -74,27 +77,40 @@ public class DataManager implements Manager.DataManager {
     }
 
     /**
-     * Returns all objects matching to the class parameter
+     * Returns all news objects.
      *
-     * @param clazz class of the object
-     * @param <T>   type of of the object
      * @return all matching elements
      */
-    public <T extends RealmObject> Observable<List<T>> findAll(Class<T> clazz) {
-        return Observable.create(new Observable.OnSubscribe<List<T>>() {
-            @Override
-            public void call(Subscriber<? super List<T>> subscriber) {
-                try {
-                    subscriber.onNext(mRealm.where(clazz)
-                            .findAll()
-                            .sort(NewsRealm.PUBDATE, Sort.DESCENDING));
-                    subscriber.onCompleted();
-                } catch (Exception e) {
-                    subscriber.onError(e);
-                }
+    public Observable<List<NewsObject>> findAll() {
 
-            }
-        });
+        List<NewsObject> objects = new ArrayList<>();
+        mRealm.where(NewsRealm.class).findAll().sort(NewsRealm.PUBDATE, Sort.DESCENDING)
+                .asObservable()
+                .subscribe(newsItems -> {
+                    for (NewsRealm each : newsItems) {
+                        objects.add(convertNews(each));
+                    }
+                });
+
+        return Observable.just(objects);
+    }
+
+    /**
+     * Converts NewsItem to NewsObject to be able to pass it between threads.
+     * @param newsItem to convert.
+     * @return NewsObject from newsItem.
+     */
+    private static NewsObject convertNews(NewsRealm newsItem) {
+        NewsObject news = new NewsObject();
+        news.setDescription(newsItem.getDescription());
+        news.setHeight(newsItem.getHeight());
+        news.setTitle(newsItem.getTitle());
+        news.setLink(newsItem.getLink());
+        news.setWidth(newsItem.getWidth());
+        news.setPubDate(newsItem.getPubDate());
+        news.setThumbnail(newsItem.getThumbnail());
+
+        return news;
     }
 
     /**

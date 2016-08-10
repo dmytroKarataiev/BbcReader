@@ -22,34 +22,42 @@
  * SOFTWARE.
  */
 
-package com.adkdevelopment.rssreader.ui.contracts;
+package com.adkdevelopment.rssreader.ui.adapters;
 
-import android.content.Intent;
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.adkdevelopment.rssreader.data.local.NewsObject;
-import com.adkdevelopment.rssreader.ui.base.MvpPresenter;
-import com.adkdevelopment.rssreader.ui.base.MvpView;
+import com.adkdevelopment.rssreader.ui.DetailFragment;
+
+import java.util.List;
 
 /**
- * MVP contract for Details Activity and Fragment.
+ * PagerAdapter for the DetailActivity to swipe between news.
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class DetailContract {
+public class PagerAdapter extends FragmentStatePagerAdapter {
 
-    public interface Presenter extends MvpPresenter<View> {
-        void loadData(Intent intent);
+    List<NewsObject> mNewsItems;
 
-        void loadData(Bundle bundle);
-
-        // TODO: fix
-        Intent getShareIntent();
+    public PagerAdapter(FragmentManager fm) {
+        super(fm);
     }
 
-    public interface View extends MvpView {
-        void showData(NewsObject newsItem);
+    @Override
+    public Fragment getItem(int position) {
+        return DetailFragment.newInstance(mNewsItems.get(position));
+    }
 
-        void showError();
+    @Override
+    public int getCount() {
+        return mNewsItems == null ? 0 : mNewsItems.size();
+    }
+
+    public void setNewsItems(List<NewsObject> newsItems) {
+        mNewsItems = newsItems;
+        notifyDataSetChanged();
     }
 
 }

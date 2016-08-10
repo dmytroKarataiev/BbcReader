@@ -31,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.adkdevelopment.rssreader.R;
+import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.utils.Utilities;
 import com.squareup.picasso.Callback;
@@ -38,7 +39,6 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.internal.Utils;
 
 /**
  * ViewHolder for a News Item element in a RecyclerView.
@@ -64,7 +64,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
      * Sets the data to the News item in a list view
      * @param item which data to use.
      */
-    public void setData(NewsRealm item) {
+    public void setData(NewsObject item) {
 
         mTextTitle.setText(item.getTitle());
         mTextDate.setText(Utilities.getRelativeDate(item.getPubDate()));

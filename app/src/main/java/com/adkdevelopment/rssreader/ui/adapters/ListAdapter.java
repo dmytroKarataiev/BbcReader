@@ -30,7 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.adkdevelopment.rssreader.R;
-import com.adkdevelopment.rssreader.data.local.NewsRealm;
+import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.ui.interfaces.ItemClickListener;
 import com.adkdevelopment.rssreader.ui.viewholders.ListViewHolder;
 import com.adkdevelopment.rssreader.utils.Utilities;
@@ -45,11 +45,11 @@ import butterknife.internal.Utils;
  */
 public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
-    private List<NewsRealm> mNews;
-    private ItemClickListener<NewsRealm, View> mListener;
+    private List<NewsObject> mNews;
+    private ItemClickListener<Integer, View> mListener;
 
-    public void setTasks(List<NewsRealm> newsItems,
-                         ItemClickListener<NewsRealm, View> listener) {
+    public void setTasks(List<NewsObject> newsItems,
+                         ItemClickListener<Integer, View> listener) {
         mNews = newsItems;
         mListener = listener;
     }
@@ -69,8 +69,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         viewHolder.setData(mNews.get(position));
         viewHolder.itemView.setOnClickListener(v -> {
             if (mListener != null) {
+                // nice reveal animation
                 Utilities.animationCard(viewHolder);
-                mListener.onItemClicked(mNews.get(pos), viewHolder.itemView);
+                mListener.onItemClicked(pos, viewHolder.itemView);
             }
         });
 

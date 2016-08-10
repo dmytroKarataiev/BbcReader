@@ -27,7 +27,7 @@ package com.adkdevelopment.rssreader.ui.presenters;
 import android.util.Log;
 
 import com.adkdevelopment.rssreader.App;
-import com.adkdevelopment.rssreader.data.local.NewsRealm;
+import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.data.remote.Item;
 import com.adkdevelopment.rssreader.data.remote.Rss;
 import com.adkdevelopment.rssreader.ui.base.BaseMvpPresenter;
@@ -62,8 +62,10 @@ public class ListPresenter
         checkViewAttached();
         getMvpView().showProgress(true);
 
-        mSubscription.add(App.getDataManager().findAll(NewsRealm.class)
-                .subscribe(new Subscriber<List<NewsRealm>>() {
+        mSubscription.add(App.getDataManager().findAll()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<List<NewsObject>>() {
                     @Override
                     public void onCompleted() {
 
@@ -71,12 +73,12 @@ public class ListPresenter
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "Error Getting: " + e);
+                        Log.e(TAG, "FindAll Error Getting: " + e);
                         getMvpView().showError();
                     }
 
                     @Override
-                    public void onNext(List<NewsRealm> realmObjects) {
+                    public void onNext(List<NewsObject> realmObjects) {
                         if (realmObjects != null && realmObjects.size() > 0) {
                             getMvpView().showData(realmObjects);
                         } else {
@@ -104,7 +106,7 @@ public class ListPresenter
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "Error Getting: " + e);
+                        Log.e(TAG, "GetNews Error Getting: " + e);
                         getMvpView().showError();
                     }
 

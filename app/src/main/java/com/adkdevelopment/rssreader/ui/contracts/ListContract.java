@@ -24,7 +24,7 @@
 
 package com.adkdevelopment.rssreader.ui.contracts;
 
-import com.adkdevelopment.rssreader.data.local.NewsRealm;
+import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.ui.base.MvpPresenter;
 import com.adkdevelopment.rssreader.ui.base.MvpView;
 
@@ -43,7 +43,7 @@ public class ListContract {
     }
 
     public interface View extends MvpView {
-        void showData(List<NewsRealm> itemList);
+        void showData(List<NewsObject> itemList);
 
         void showEmpty();
 

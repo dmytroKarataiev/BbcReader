@@ -30,7 +30,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 
@@ -99,11 +98,10 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onFragmentInteraction(NewsRealm item, View view) {
-        Log.d(TAG, item.getDescription());
+    public void onFragmentInteraction(Integer item, View view) {
         if (!mTwoPane) {
             Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra(NewsRealm.NEWS_EXTRA, item);
+            intent.putExtra(NewsRealm.NEWS_POSITION, item);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Pair pair = Pair.create(view.findViewById(R.id.task_item_card),

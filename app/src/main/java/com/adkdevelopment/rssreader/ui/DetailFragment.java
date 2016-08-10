@@ -27,20 +27,15 @@ package com.adkdevelopment.rssreader.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.adkdevelopment.rssreader.R;
-import com.adkdevelopment.rssreader.data.local.NewsRealm;
+import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.ui.base.BaseFragment;
 import com.adkdevelopment.rssreader.ui.contracts.DetailContract;
 import com.adkdevelopment.rssreader.ui.presenters.DetailPresenter;
@@ -69,6 +64,8 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
     TextView mTextDescription;
     @BindView(R.id.detail_link)
     TextView mTextLink;
+    @BindView(R.id.backdrop)
+    ImageView mBackdrop;
     private Unbinder mUnbinder;
 
     public DetailFragment() {
@@ -81,9 +78,10 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
      *
      * @return A new instance of fragment DetailFragment.
      */
-    public static DetailFragment newInstance() {
+    public static DetailFragment newInstance(NewsObject item) {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
+        args.putParcelable(NewsObject.NEWS_EXTRA, item);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,48 +97,31 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
         mPresenter = new DetailPresenter();
         mPresenter.attachView(this);
 
-        setHasOptionsMenu(true);
-
         return rootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPresenter.loadData(getActivity().getIntent());
+        if (getArguments() != null) {
+            mPresenter.loadData(getArguments());
+        } else {
+            mPresenter.loadData(getActivity().getIntent());
+        }
     }
 
     @Override
-    public void showData(NewsRealm newsItem) {
-        ImageView backdrop = ButterKnife.findById(getActivity(), R.id.backdrop);
-        if (backdrop != null) {
-            Picasso.with(getContext()).load(newsItem.getThumbnail()).into(backdrop);
+    public void showData(NewsObject newsItem) {
+
+        //ImageView backdrop = ButterKnife.findById(getActivity(), R.id.backdrop);
+        if (mBackdrop != null) {
+            Picasso.with(getContext()).load(newsItem.getThumbnail()).into(mBackdrop);
         }
 
         mTextTitle.setText(newsItem.getTitle());
         mTextDescription.setText(newsItem.getDescription());
         String learMore = getString(R.string.learn_more) + " " + newsItem.getLink();
         mTextLink.setText(learMore);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.menu_detail, menu);
-
-        // Retrieve the share menu item
-        MenuItem item = menu.findItem(R.id.share);
-
-        // Get the provider and hold onto it to set/change the share intent.
-        ShareActionProvider mShareActionProvider =
-                (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-
-        if (mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(mPresenter.getShareIntent());
-        } else {
-            Log.e(TAG, "fail to set a share intent");
-        }
     }
 
     @Override
@@ -159,5 +140,6 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
         super.onDestroyView();
         mUnbinder.unbind();
     }
+
 }
 

@@ -25,7 +25,9 @@
 package com.adkdevelopment.rssreader.ui.presenters;
 
 import android.content.Intent;
+import android.os.Bundle;
 
+import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.ui.base.BaseMvpPresenter;
 import com.adkdevelopment.rssreader.ui.contracts.DetailContract;
@@ -38,7 +40,7 @@ public class DetailPresenter
         extends BaseMvpPresenter<DetailContract.View>
         implements DetailContract.Presenter {
 
-    private NewsRealm mNewsItem;
+    private NewsObject mNewsItem;
 
     @Override
     public void loadData(Intent intent) {
@@ -50,6 +52,17 @@ public class DetailPresenter
         }
     }
 
+    @Override
+    public void loadData(Bundle bundle) {
+        if (bundle.getParcelable(NewsRealm.NEWS_EXTRA) == null) {
+            getMvpView().showError();
+        } else {
+            mNewsItem = bundle.getParcelable(NewsRealm.NEWS_EXTRA);
+            getMvpView().showData(mNewsItem);
+        }
+    }
+
+    // TODO: 8/10/16 fix 
     @Override
     public Intent getShareIntent() {
         Intent sendIntent = new Intent(Intent.ACTION_SEND);

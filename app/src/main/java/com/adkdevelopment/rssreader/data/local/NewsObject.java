@@ -27,19 +27,15 @@ package com.adkdevelopment.rssreader.data.local;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Local Realm object class for News items from the BBC RSS.
+ * Local object class for News items from the BBC RSS.
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class NewsRealm extends RealmObject implements Parcelable {
+public class NewsObject implements Parcelable {
 
-    public static final String PUBDATE = "pubDate";
-    public static final String TITLE = "title";
     public static final String NEWS_EXTRA = "news";
-    public static final String NEWS_POSITION = "news_pos";
 
     private long pubDate;
 
@@ -131,10 +127,10 @@ public class NewsRealm extends RealmObject implements Parcelable {
         dest.writeInt(this.height);
     }
 
-    public NewsRealm() {
+    public NewsObject() {
     }
 
-    protected NewsRealm(Parcel in) {
+    protected NewsObject(Parcel in) {
         this.pubDate = in.readLong();
         this.title = in.readString();
         this.description = in.readString();
@@ -144,16 +140,16 @@ public class NewsRealm extends RealmObject implements Parcelable {
         this.height = in.readInt();
     }
 
-    public static final Parcelable.Creator<NewsRealm> CREATOR = new Parcelable.Creator<NewsRealm>() {
+    public static final Creator<NewsObject> CREATOR = new Creator<NewsObject>() {
         @Override
-        public NewsRealm createFromParcel(Parcel source) {
-            return new NewsRealm(source);
+        public NewsObject createFromParcel(Parcel source) {
+            return new NewsObject(source);
         }
 
         @Override
-        public NewsRealm[] newArray(int size) {
-            return new NewsRealm[size];
+        public NewsObject[] newArray(int size) {
+            return new NewsObject[size];
         }
     };
-}
 
+}
