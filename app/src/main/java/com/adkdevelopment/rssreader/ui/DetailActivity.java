@@ -41,6 +41,7 @@ import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.ui.adapters.PagerAdapter;
 import com.adkdevelopment.rssreader.ui.base.BaseActivity;
+import com.adkdevelopment.rssreader.ui.behavior.ZoomOutPageTransformer;
 
 import java.util.List;
 
@@ -80,6 +81,9 @@ public class DetailActivity extends BaseActivity {
 
         mAdapter = new PagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mAdapter);
+
+        // zoom effect on swipe
+        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
 
         mSubscription = App.getDataManager().findAll()
                 .observeOn(AndroidSchedulers.mainThread())
