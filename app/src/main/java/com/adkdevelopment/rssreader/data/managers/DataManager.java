@@ -25,18 +25,24 @@
 package com.adkdevelopment.rssreader.data.managers;
 
 import android.content.Context;
+import android.text.format.DateUtils;
+import android.util.Log;
 
 import com.adkdevelopment.rssreader.data.contracts.Manager;
 import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
+import com.adkdevelopment.rssreader.data.remote.Item;
+import com.adkdevelopment.rssreader.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.Sort;
 import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Datamanager to perform all Database-related work.
@@ -55,7 +61,6 @@ public class DataManager implements Manager.DataManager {
 
     @Override
     public void clear() {
-
     }
 
     private Realm getRealmInstance() {
@@ -66,14 +71,41 @@ public class DataManager implements Manager.DataManager {
      * Add RealmObjects to the Database.
      *
      * @param model object to add
-     * @param <T>   type of the object
      * @return added RealmObject.
      */
-    public <T extends RealmObject> T add(T model) {
-        mRealm.beginTransaction();
-        mRealm.copyToRealmOrUpdate(model);
-        mRealm.commitTransaction();
+    @Override
+    public <T extends RealmObject> T addTask(T model) {
+        Realm realm = getRealmInstance();
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(model);
+        realm.commitTransaction();
         return model;
+    }
+
+    /**
+     * Adds data in bulk to the database.
+     * @param list of objects to add to the DB.
+     * @return Observable of added and converted to Realm Object items.
+     */
+    @Override
+    public Observable<List<NewsRealm>> addBulk(final List<Item> list) {
+        return Observable.create(new Observable.OnSubscribe<List<NewsRealm>>() {
+
+            @Override
+            public void call(Subscriber<? super List<NewsRealm>> subscriber) {
+                try {
+                    List<NewsRealm> realmList = new ArrayList<>();
+                    for (Item each : list) {
+                        realmList.add(addTask(Utilities.convertNews(each)));
+                    }
+                    subscriber.onNext(realmList);
+                    subscriber.onCompleted();
+                } catch (Exception e) {
+                    Log.e(TAG, "Error: " + e);
+                    subscriber.onError(e);
+                }
+            }
+        });
     }
 
     /**
@@ -81,7 +113,16 @@ public class DataManager implements Manager.DataManager {
      *
      * @return all matching elements
      */
+    @Override
     public Observable<List<NewsObject>> findAll() {
+
+        // Delete news older than 24 hours.
+        RealmResults<NewsRealm> resultsDelete = mRealm.where(NewsRealm.class)
+                .lessThan(NewsRealm.PUBDATE, System.currentTimeMillis() - DateUtils.DAY_IN_MILLIS)
+                .findAll();
+        mRealm.beginTransaction();
+        resultsDelete.deleteAllFromRealm();
+        mRealm.commitTransaction();
 
         List<NewsObject> objects = new ArrayList<>();
         mRealm.where(NewsRealm.class).findAll().sort(NewsRealm.PUBDATE, Sort.DESCENDING)

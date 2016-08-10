@@ -43,11 +43,11 @@ public class NewsRealm extends RealmObject implements Parcelable {
 
     private long pubDate;
 
-    @PrimaryKey
     private String title;
 
     private String description;
 
+    @PrimaryKey
     private String link;
 
     private String thumbnail;

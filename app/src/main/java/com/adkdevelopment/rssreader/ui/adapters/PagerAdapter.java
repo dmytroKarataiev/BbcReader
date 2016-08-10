@@ -31,6 +31,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.ui.DetailFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ import java.util.List;
  */
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
-    List<NewsObject> mNewsItems;
+    private List<NewsObject> mNewsItems;
 
     public PagerAdapter(FragmentManager fm) {
         super(fm);
@@ -56,7 +57,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void setNewsItems(List<NewsObject> newsItems) {
-        mNewsItems = newsItems;
+        mNewsItems = new ArrayList<>(newsItems);
         notifyDataSetChanged();
     }
 

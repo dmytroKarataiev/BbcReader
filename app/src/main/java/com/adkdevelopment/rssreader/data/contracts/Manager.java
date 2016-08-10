@@ -27,6 +27,16 @@ package com.adkdevelopment.rssreader.data.contracts;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.adkdevelopment.rssreader.data.RssService;
+import com.adkdevelopment.rssreader.data.local.NewsObject;
+import com.adkdevelopment.rssreader.data.local.NewsRealm;
+import com.adkdevelopment.rssreader.data.remote.Item;
+
+import java.util.List;
+
+import io.realm.RealmObject;
+import rx.Observable;
+
 /**
  * Contract for all managers in the app.
  * Created by Dmytro Karataiev on 8/10/16.
@@ -41,9 +51,7 @@ public interface Manager {
      * SharedPreferences manager.
      */
     interface PrefsManager extends Manager {
-
         SharedPreferences getSharedPrefs();
-
     }
 
     /**
@@ -51,6 +59,19 @@ public interface Manager {
      * retrieval of information.
      */
     interface DataManager extends Manager {
+        <T extends RealmObject> T addTask(T model);
 
+        Observable<List<NewsObject>> findAll();
+
+        Observable<List<NewsRealm>> addBulk(List<Item> list);
+
+        <T extends RealmObject> List<T> search(Class<T> clazz, String query);
+    }
+
+    /**
+     * Manages all REST-related work through Retrofit 2.0.
+     */
+    interface ApiManager extends Manager {
+        RssService getNewsService();
     }
 }

@@ -24,11 +24,12 @@
 
 package com.adkdevelopment.rssreader.ui.presenters;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.adkdevelopment.rssreader.App;
 import com.adkdevelopment.rssreader.data.local.NewsObject;
-import com.adkdevelopment.rssreader.data.remote.Item;
+import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.data.remote.Rss;
 import com.adkdevelopment.rssreader.ui.base.BaseMvpPresenter;
 import com.adkdevelopment.rssreader.ui.contracts.ListContract;
@@ -52,9 +53,12 @@ public class ListPresenter
     private static final String TAG = ListPresenter.class.getSimpleName();
 
     private CompositeSubscription mSubscription;
+    private Context mContext;
+    private Rss mRss = null;
 
-    public ListPresenter() {
+    public ListPresenter(Context context) {
         mSubscription = new CompositeSubscription();
+        mContext = context;
     }
 
     @Override
@@ -68,13 +72,14 @@ public class ListPresenter
                 .subscribe(new Subscriber<List<NewsObject>>() {
                     @Override
                     public void onCompleted() {
-
+                        getMvpView().showProgress(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "FindAll Error Getting: " + e);
                         getMvpView().showError();
+                        getMvpView().showProgress(false);
                     }
 
                     @Override
@@ -83,6 +88,7 @@ public class ListPresenter
                             getMvpView().showData(realmObjects);
                         } else {
                             getMvpView().showEmpty();
+                            fetchData();
                         }
                     }
                 }));
@@ -95,30 +101,57 @@ public class ListPresenter
         checkViewAttached();
         getMvpView().showProgress(true);
 
-        mSubscription.add(App.getApiManager().getNewsService().getNews()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Rss>() {
-                    @Override
-                    public void onCompleted() {
-                        requestData();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "GetNews Error Getting: " + e);
-                        getMvpView().showError();
-                    }
-
-                    @Override
-                    public void onNext(Rss rss) {
-                        Log.d(TAG, "rss.getChannel().getItem().size():" + rss.getChannel().getItem().size());
-                        for (Item each : rss.getChannel().getItem()) {
-                            App.getDataManager().add(Utilities.convertNews(each));
+        if (Utilities.isOnline(mContext)) {
+            mSubscription.add(App.getApiManager().getNewsService().getNews()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Subscriber<Rss>() {
+                        @Override
+                        public void onCompleted() {
+                            addToDb();
                         }
-                    }
-                }));
-        getMvpView().showProgress(false);
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e(TAG, "GetNews Error Getting: " + e);
+                        }
+
+                        @Override
+                        public void onNext(Rss rss) {
+                            mRss = rss;
+                        }
+                    }));
+        } else {
+            getMvpView().showProgress(false);
+        }
+
+    }
+
+    /**
+     * Method to add news to the db in async.
+     */
+    private void addToDb() {
+        if (mRss != null && mRss.getChannel().getItem().size() > 0) {
+            mSubscription.add(App.getDataManager().addBulk(mRss.getChannel().getItem())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Subscriber<List<NewsRealm>>() {
+                        @Override
+                        public void onCompleted() {
+                            requestData();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e(TAG, "GetNews Error Getting: " + e);
+                            getMvpView().showError();
+                        }
+
+                        @Override
+                        public void onNext(List<NewsRealm> itemList) {
+                        }
+                    }));
+        }
     }
 
     @Override

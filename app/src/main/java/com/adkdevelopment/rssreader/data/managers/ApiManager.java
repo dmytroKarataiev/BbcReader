@@ -24,7 +24,10 @@
 
 package com.adkdevelopment.rssreader.data.managers;
 
+import android.content.Context;
+
 import com.adkdevelopment.rssreader.data.RssService;
+import com.adkdevelopment.rssreader.data.contracts.Manager;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -34,20 +37,42 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
  * Api Manager which does all network-related work with BBC API.
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class ApiManager {
+public class ApiManager implements Manager.ApiManager {
 
     private final String BASE_URL = "http://feeds.bbci.co.uk/news/";
 
-    private final Retrofit RSS_ADAPTER = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(SimpleXmlConverterFactory.create())
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-            .build();
+    private Retrofit RSS_ADAPTER;
+    private RssService RSS_SERVICE;
 
-    private final RssService RSS_SERVICE = RSS_ADAPTER.create(RssService.class);
-
+    @Override
     public RssService getNewsService() {
         return RSS_SERVICE;
     }
 
+    @Override
+    public void init(Context context) {
+        initRetrofit();
+        initService();
+    }
+
+    /**
+     * Initialises Retrofit with a BASE_URL, XML converted and Rx adapter.
+     */
+    private void initRetrofit() {
+        RSS_ADAPTER = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(SimpleXmlConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+    }
+
+    private void initService() {
+        RSS_SERVICE = RSS_ADAPTER.create(RssService.class);
+    }
+
+    @Override
+    public void clear() {
+        RSS_ADAPTER = null;
+        RSS_SERVICE = null;
+    }
 }

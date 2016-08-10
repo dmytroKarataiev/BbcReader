@@ -26,6 +26,7 @@ package com.adkdevelopment.rssreader.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -60,10 +61,19 @@ import butterknife.Unbinder;
 public class ListFragment extends BaseFragment
         implements ListContract.View, ItemClickListener<Integer, View> {
 
+    private static final String TAG = ListFragment.class.getSimpleName();
+
     private ListPresenter mPresenter;
     private ListAdapter mAdapter;
 
     private OnFragmentListener mListener;
+
+    // to prevent NPE with SharedTransitions while updating the data
+    private boolean mInProgress;
+
+    // Because of using a Presenter - we have to save position of a RecyclerView manually
+    public static final String POSITION = "pos";
+    private int mPosition = 0;
 
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
@@ -104,11 +114,12 @@ public class ListFragment extends BaseFragment
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mPresenter = new ListPresenter();
+        mPresenter = new ListPresenter(getContext());
         mPresenter.attachView(this);
 
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             // on force refresh downloads all data
+            mPosition = 0;
             mPresenter.fetchData();
         });
 
@@ -148,6 +159,7 @@ public class ListFragment extends BaseFragment
         mListEmpty.setVisibility(View.GONE);
         mAdapter.setTasks(itemList, this);
         mAdapter.notifyDataSetChanged();
+        mRecyclerView.scrollToPosition(mPosition);
     }
 
     @Override
@@ -166,6 +178,7 @@ public class ListFragment extends BaseFragment
 
     @Override
     public void showProgress(boolean isInProgress) {
+        mInProgress = isInProgress;
         if (isInProgress) {
             mProgressBar.setVisibility(View.VISIBLE);
         } else {
@@ -176,8 +189,24 @@ public class ListFragment extends BaseFragment
 
     @Override
     public void onItemClicked(Integer item, View view) {
-        if (mListener != null) {
+        if (mListener != null && !mInProgress) {
             mListener.onFragmentInteraction(item, view);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                .findFirstVisibleItemPosition();
+        outState.putInt(POSITION, mPosition);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            mPosition = savedInstanceState.getInt(POSITION);
         }
     }
 

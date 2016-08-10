@@ -26,6 +26,9 @@ package com.adkdevelopment.rssreader.utils;
 
 import android.animation.Animator;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -143,6 +146,21 @@ public class Utilities {
                 }
             });
         }
+    }
 
+    /**
+     * Method to check if device is connected to the internet
+     * @param context from which call is being made
+     * @return true if connected, false otherwise
+     */
+    public static boolean isOnline(Context context) {
+        if (context != null) {
+            ConnectivityManager cm =
+                    (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        }
+        return false;
     }
 }

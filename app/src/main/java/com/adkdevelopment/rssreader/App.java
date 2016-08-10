@@ -60,6 +60,7 @@ public class App extends Application {
     public static ApiManager getApiManager() {
         if (sApiManager == null) {
             sApiManager = new ApiManager();
+            sApiManager.init(getContext());
         }
         return sApiManager;
     }
@@ -107,5 +108,13 @@ public class App extends Application {
         return sContext;
     }
 
+    /**
+     * Clears everything if necessary.
+     */
+    public void clear() {
+        sApiManager.clear();
+        sDataManager.clear();
+        sSharedPrefManager.clear();
+    }
 
 }

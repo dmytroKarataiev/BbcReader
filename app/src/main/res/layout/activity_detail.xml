@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ MIT License
   ~
   ~ Copyright (c) 2016. Dmytro Karataiev
@@ -50,11 +49,11 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
-        android:transitionGroup="true"
-        android:transitionName="@string/transition_card"
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:transitionGroup="true"
+        android:transitionName="@string/transition_card"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -79,8 +79,6 @@ public class DetailActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        mAdapter = new PagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mAdapter);
 
         // zoom effect on swipe
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
@@ -91,7 +89,7 @@ public class DetailActivity extends BaseActivity {
                 .subscribe(new Subscriber<List<NewsObject>>() {
                     @Override
                     public void onCompleted() {
-
+                        pagerListener();
                     }
 
                     @Override
@@ -101,16 +99,21 @@ public class DetailActivity extends BaseActivity {
 
                     @Override
                     public void onNext(List<NewsObject> itemList) {
+                        mAdapter = new PagerAdapter(getSupportFragmentManager());
                         mNews = itemList;
                         mAdapter.setNewsItems(itemList);
+                        mPager.setAdapter(mAdapter);
                         mPager.setCurrentItem(getIntent().getIntExtra(NewsRealm.NEWS_POSITION, 0));
                     }
                 });
         initActionBar();
 
-        // TODO: 8/10/16 fix limit 
-        mPager.setOffscreenPageLimit(3);
+    }
 
+    /**
+     * Adds a listener to the PagerAdapter to set a share intent.
+     */
+    private void pagerListener() {
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -131,9 +134,9 @@ public class DetailActivity extends BaseActivity {
         });
     }
 
-    /**
-     * Performs all preparation procedures to initialize Toolbar and ActionBar
-     */
+        /**
+         * Performs all preparation procedures to initialize Toolbar and ActionBar
+         */
     private void initActionBar() {
 
         // Initialize a custom Toolbar
