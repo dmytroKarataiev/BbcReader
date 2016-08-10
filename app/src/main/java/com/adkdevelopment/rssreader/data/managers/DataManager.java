@@ -34,6 +34,8 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.Sort;
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Datamanager to perform all Database-related work.
@@ -78,8 +80,21 @@ public class DataManager implements Manager.DataManager {
      * @param <T>   type of of the object
      * @return all matching elements
      */
-    public <T extends RealmObject> List<T> findAll(Class<T> clazz) {
-        return mRealm.where(clazz).findAll().sort(NewsRealm.PUBDATE, Sort.DESCENDING);
+    public <T extends RealmObject> Observable<List<T>> findAll(Class<T> clazz) {
+        return Observable.create(new Observable.OnSubscribe<List<T>>() {
+            @Override
+            public void call(Subscriber<? super List<T>> subscriber) {
+                try {
+                    subscriber.onNext(mRealm.where(clazz)
+                            .findAll()
+                            .sort(NewsRealm.PUBDATE, Sort.DESCENDING));
+                    subscriber.onCompleted();
+                } catch (Exception e) {
+                    subscriber.onError(e);
+                }
+
+            }
+        });
     }
 
     /**

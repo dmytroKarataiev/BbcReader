@@ -24,36 +24,23 @@
 
 package com.adkdevelopment.rssreader.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
+import android.view.MenuItem;
 
 import com.adkdevelopment.rssreader.R;
-import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.ui.base.BaseActivity;
-import com.adkdevelopment.rssreader.ui.contracts.MainContract;
-import com.adkdevelopment.rssreader.ui.interfaces.OnFragmentListener;
-import com.adkdevelopment.rssreader.ui.presenters.MainPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Main class to start the App. Determines whether we have a phone or a tablet.
+ * DetailActivity for a phone, which show additional info about news.
+ *
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class MainActivity extends BaseActivity
-        implements MainContract.View, OnFragmentListener {
-
-    private static final String TAG = MainActivity.class.getSimpleName();
-
-    private MainPresenter mPresenter;
-
-    // Whether or not the activity is in two-pane mode, i.e. running on a tablet device
-    private boolean mTwoPane;
+public class DetailActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -61,18 +48,11 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_detail);
+
         ButterKnife.bind(this);
 
-        mPresenter = new MainPresenter();
-        mPresenter.attachView(this);
-
         initActionBar();
-
-        if (findViewById(R.id.item_detail_container) != null) {
-            // The detail container view will be present only in the large-screen layouts
-            mTwoPane = true;
-        }
     }
 
     /**
@@ -80,29 +60,30 @@ public class MainActivity extends BaseActivity
      */
     private void initActionBar() {
 
-        // Set up ActionBar and corresponding icons
+        // Initialize a custom Toolbar
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
+
+        // Add back button to the actionbar
         if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setLogo(R.drawable.logo_title);
             actionBar.setTitle(R.string.title_main);
         }
     }
 
-
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.detachView();
-    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
-    @Override
-    public void onFragmentInteraction(NewsRealm item, View view) {
-        Log.d(TAG, item.getDescription());
-        if (!mTwoPane) {
-            Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra(NewsRealm.NEWS_EXTRA, item);
-            startActivity(intent);
+        // copy the behavior of the hardware back button
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
         }
+
+        return super.onOptionsItemSelected(item);
     }
+
 }

@@ -22,33 +22,22 @@
  * SOFTWARE.
  */
 
-package com.adkdevelopment.rssreader.ui.contracts;
+package com.adkdevelopment.rssreader.ui.interfaces;
+
+import android.view.View;
 
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
-import com.adkdevelopment.rssreader.ui.base.MvpPresenter;
-import com.adkdevelopment.rssreader.ui.base.MvpView;
-
-import java.util.List;
 
 /**
- * MVP Contract for a ListFragment and Presenter.
+ * This interface must be implemented by activities that contain fragments
+ * to allow an interaction in a fragment to be communicated
+ * to the activity and potentially other fragments contained in that
+ * activity.
+ *
+ * In a more sophisticated app should be changed to an EventBus.
+ *
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class ListContract {
-
-    public interface Presenter extends MvpPresenter<View> {
-        void requestData();
-
-        void fetchData();
-    }
-
-    public interface View extends MvpView {
-        void showData(List<NewsRealm> itemList);
-
-        void showEmpty();
-
-        void showError();
-
-        void showProgress(boolean isInProgress);
-    }
+public interface OnFragmentListener {
+    void onFragmentInteraction(NewsRealm item, View view);
 }

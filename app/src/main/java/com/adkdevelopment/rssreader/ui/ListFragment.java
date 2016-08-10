@@ -30,7 +30,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +42,7 @@ import com.adkdevelopment.rssreader.ui.adapters.ListAdapter;
 import com.adkdevelopment.rssreader.ui.base.BaseFragment;
 import com.adkdevelopment.rssreader.ui.contracts.ListContract;
 import com.adkdevelopment.rssreader.ui.interfaces.ItemClickListener;
+import com.adkdevelopment.rssreader.ui.interfaces.OnFragmentListener;
 import com.adkdevelopment.rssreader.ui.presenters.ListPresenter;
 
 import java.util.List;
@@ -62,7 +62,8 @@ public class ListFragment extends BaseFragment
 
     private ListPresenter mPresenter;
     private ListAdapter mAdapter;
-    private boolean isUpdating;
+
+    private OnFragmentListener mListener;
 
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
@@ -134,6 +135,8 @@ public class ListFragment extends BaseFragment
             mPresenter.fetchData();
         });
 
+        mPresenter.requestData();
+
         return rootView;
 
     }
@@ -141,12 +144,19 @@ public class ListFragment extends BaseFragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (context instanceof OnFragmentListener) {
+            mListener = (OnFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mPresenter.detachView();
+        mListener = null;
     }
 
     @Override
@@ -159,7 +169,6 @@ public class ListFragment extends BaseFragment
     @Override
     public void showData(List<NewsRealm> itemList) {
         mListEmpty.setVisibility(View.GONE);
-        isUpdating = false;
         mAdapter.setTasks(itemList, this);
         mAdapter.notifyDataSetChanged();
     }
@@ -190,6 +199,9 @@ public class ListFragment extends BaseFragment
 
     @Override
     public void onItemClicked(NewsRealm item, View view) {
-        Log.d("ListFragment", item.getDescription());
+        if (mListener != null) {
+            mListener.onFragmentInteraction(item, view);
+        }
     }
+
 }

@@ -32,6 +32,7 @@ Rss feed reader for a BBC network news feed. Works fast, utilises MVP architectu
 
 # Used materials
 * BBC Icon - [www.iconarchive.com](http://www.iconarchive.com/show/circle-icons-by-martz90/bbc-news-icon.html).
+* BBC Logo - [wikimedia.org](https://upload.wikimedia.org/wikipedia/commons/e/eb/BBC.svg).
 
 License
 -------

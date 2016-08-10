@@ -37,9 +37,9 @@ import com.adkdevelopment.rssreader.utils.Utilities;
 import java.util.List;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Presenter for the ListFragment.
@@ -51,11 +51,41 @@ public class ListPresenter
 
     private static final String TAG = ListPresenter.class.getSimpleName();
 
-    private Subscription mSubscription;
+    private CompositeSubscription mSubscription;
+
+    public ListPresenter() {
+        mSubscription = new CompositeSubscription();
+    }
 
     @Override
-    public List<NewsRealm> getData() {
-        return App.getDataManager().findAll(NewsRealm.class);
+    public void requestData() {
+        checkViewAttached();
+        getMvpView().showProgress(true);
+
+        mSubscription.add(App.getDataManager().findAll(NewsRealm.class)
+                .subscribe(new Subscriber<List<NewsRealm>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "Error Getting: " + e);
+                        getMvpView().showError();
+                    }
+
+                    @Override
+                    public void onNext(List<NewsRealm> realmObjects) {
+                        if (realmObjects != null && realmObjects.size() > 0) {
+                            getMvpView().showData(realmObjects);
+                        } else {
+                            getMvpView().showEmpty();
+                        }
+                    }
+                }));
+
+        getMvpView().showProgress(false);
     }
 
     @Override
@@ -63,13 +93,13 @@ public class ListPresenter
         checkViewAttached();
         getMvpView().showProgress(true);
 
-        mSubscription = App.getApiManager().getNewsService().getNews()
+        mSubscription.add(App.getApiManager().getNewsService().getNews()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Rss>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showData(getData());
+                        requestData();
                     }
 
                     @Override
@@ -83,11 +113,9 @@ public class ListPresenter
                         Log.d(TAG, "rss.getChannel().getItem().size():" + rss.getChannel().getItem().size());
                         for (Item each : rss.getChannel().getItem()) {
                             App.getDataManager().add(Utilities.convertNews(each));
-                            Log.d(TAG, "App.getDataManager().findAll(NewsItem.class).size():"
-                                    + App.getDataManager().findAll(NewsRealm.class).size());
                         }
                     }
-                });
+                }));
         getMvpView().showProgress(false);
     }
 

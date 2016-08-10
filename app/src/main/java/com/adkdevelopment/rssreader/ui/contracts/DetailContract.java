@@ -24,31 +24,27 @@
 
 package com.adkdevelopment.rssreader.ui.contracts;
 
+import android.content.Intent;
+
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.ui.base.MvpPresenter;
 import com.adkdevelopment.rssreader.ui.base.MvpView;
 
-import java.util.List;
-
 /**
- * MVP Contract for a ListFragment and Presenter.
+ * MVP contract for Details Activity and Fragment.
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class ListContract {
+public class DetailContract {
 
     public interface Presenter extends MvpPresenter<View> {
-        void requestData();
+        void loadData(Intent intent);
 
-        void fetchData();
+        Intent getShareIntent();
     }
 
     public interface View extends MvpView {
-        void showData(List<NewsRealm> itemList);
-
-        void showEmpty();
+        void showData(NewsRealm newsItem);
 
         void showError();
-
-        void showProgress(boolean isInProgress);
     }
 }

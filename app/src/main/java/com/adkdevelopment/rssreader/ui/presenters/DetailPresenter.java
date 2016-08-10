@@ -22,33 +22,42 @@
  * SOFTWARE.
  */
 
-package com.adkdevelopment.rssreader.ui.contracts;
+package com.adkdevelopment.rssreader.ui.presenters;
+
+import android.content.Intent;
 
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
-import com.adkdevelopment.rssreader.ui.base.MvpPresenter;
-import com.adkdevelopment.rssreader.ui.base.MvpView;
-
-import java.util.List;
+import com.adkdevelopment.rssreader.ui.base.BaseMvpPresenter;
+import com.adkdevelopment.rssreader.ui.contracts.DetailContract;
 
 /**
- * MVP Contract for a ListFragment and Presenter.
+ * Presenter for a DetailFragment.
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class ListContract {
+public class DetailPresenter
+        extends BaseMvpPresenter<DetailContract.View>
+        implements DetailContract.Presenter {
 
-    public interface Presenter extends MvpPresenter<View> {
-        void requestData();
+    private NewsRealm mNewsItem;
 
-        void fetchData();
+    @Override
+    public void loadData(Intent intent) {
+        if (intent == null) {
+            getMvpView().showError();
+        } else {
+            mNewsItem = intent.getParcelableExtra(NewsRealm.NEWS_EXTRA);
+            getMvpView().showData(mNewsItem);
+        }
     }
 
-    public interface View extends MvpView {
-        void showData(List<NewsRealm> itemList);
-
-        void showEmpty();
-
-        void showError();
-
-        void showProgress(boolean isInProgress);
+    @Override
+    public Intent getShareIntent() {
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        sendIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        sendIntent.setType("text/plain");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, mNewsItem.getTitle() + "\n"
+                + mNewsItem.getDescription() + "\n"
+                + mNewsItem.getLink());
+        return sendIntent;
     }
 }

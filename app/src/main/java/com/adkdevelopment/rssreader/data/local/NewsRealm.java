@@ -38,6 +38,7 @@ public class NewsRealm extends RealmObject implements Parcelable {
 
     public static final String PUBDATE = "pubDate";
     public static final String TITLE = "title";
+    public static final String NEWS_EXTRA = "news";
 
     private long pubDate;
 
