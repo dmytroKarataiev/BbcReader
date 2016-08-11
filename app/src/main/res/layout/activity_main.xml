@@ -28,21 +28,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".ui.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/collapsing_height"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="match_parent"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
+            app:titleEnabled="false"
+            tools:ignore="InconsistentLayout">
 
+            <View
+                android:id="@+id/focus_thief"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <EditText
+                android:id="@+id/searchBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/colorLighter"
+                android:hint="@string/search_articles"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords"
+                android:padding="@dimen/padding_default"
+                tools:ignore="InconsistentLayout" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout

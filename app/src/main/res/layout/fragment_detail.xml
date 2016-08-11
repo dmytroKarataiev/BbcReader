@@ -28,7 +28,7 @@
     android:id="@+id/coordinator_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.DetailActivity">
+    tools:context=".ui.DetailActivity" >
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -44,7 +44,8 @@
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:titleEnabled="false">
+            app:titleEnabled="false"
+            tools:ignore="InconsistentLayout">
 
             <ImageView
                 android:id="@+id/backdrop"
@@ -78,18 +79,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_default"
-                android:text="@string/hello_blank_fragment"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+            <TextView
+                android:id="@+id/detail_date"
+                android:layout_below="@id/detail_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/padding_default"
+                android:paddingLeft="@dimen/padding_default"
+                android:paddingRight="@dimen/padding_default"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
             <TextView
                 android:id="@+id/detail_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/detail_title"
+                android:layout_below="@id/detail_date"
                 android:paddingBottom="@dimen/padding_default"
                 android:paddingLeft="@dimen/padding_default"
                 android:paddingRight="@dimen/padding_default"
-                android:text="@string/hello_blank_fragment"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView

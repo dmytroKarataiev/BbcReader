@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.adkdevelopment.rssreader.data;
+package com.adkdevelopment.rssreader.data.services;
 
 import com.adkdevelopment.rssreader.data.remote.Rss;
 

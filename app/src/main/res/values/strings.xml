@@ -29,14 +29,12 @@
     <string name="recyclerview_empty_text">Oops! Something is wrong. Please check your internet connection and try again.</string>
     <string name="fragment_error">Error somewhere</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!-- SharedTransitions -->
     <string name="transition_card" translatable="false">card</string>
     <string name="description_news">Thumbnail for the news item</string>
     <string name="title_main">Reader</string>
 
     <string name="learn_more">Learn more:</string>
+    <string name="search_articles">Search for articles</string>
 
 </resources>

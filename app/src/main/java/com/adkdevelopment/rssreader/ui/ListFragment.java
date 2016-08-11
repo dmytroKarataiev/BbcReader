@@ -31,9 +31,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -45,12 +47,18 @@ import com.adkdevelopment.rssreader.ui.contracts.ListContract;
 import com.adkdevelopment.rssreader.ui.interfaces.ItemClickListener;
 import com.adkdevelopment.rssreader.ui.interfaces.OnFragmentListener;
 import com.adkdevelopment.rssreader.ui.presenters.ListPresenter;
+import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +67,7 @@ import butterknife.Unbinder;
  * Created by Dmytro Karataiev on 8/10/16.
  */
 public class ListFragment extends BaseFragment
-        implements ListContract.View, ItemClickListener<Integer, View, NewsObject> {
+        implements ListContract.View, ItemClickListener<Integer, View, List<NewsObject>> {
 
     private ListPresenter mPresenter;
     private ListAdapter mAdapter;
@@ -70,8 +78,11 @@ public class ListFragment extends BaseFragment
     private boolean mInProgress;
 
     // Due to using Presenter - we have to save position of a RecyclerView manually
-    public static final String POSITION = "pos";
+    private static final String POSITION = "pos";
     private int mPosition = 0;
+
+    // RxAndroid EditText Subscription
+    private Subscription mSubscription;
 
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
@@ -127,7 +138,52 @@ public class ListFragment extends BaseFragment
         mPresenter.fetchData();
 
         return rootView;
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        EditText editText = ButterKnife.findById(getActivity(), R.id.searchBar);
+        if (editText != null) {
+
+            mSubscription = RxTextView.textChangeEvents(editText)
+                    .debounce(400, TimeUnit.MILLISECONDS)
+                    // filters onCreate event when there was nothing in the EditText,
+                    // so the list of movies won't be updated
+                    .filter(textViewTextChangeEvent -> !(textViewTextChangeEvent.count() == 0 &&
+                            textViewTextChangeEvent.before() == 0))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(getSearchObserver());
+        }
+    }
+
+    /**
+     * Creates an Observer for an EditText Subscription.
+     * @return Observer which fetches an update.
+     */
+    private Observer<TextViewTextChangeEvent> getSearchObserver() {
+        return new Observer<TextViewTextChangeEvent>() {
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "Error!" + e);
+            }
+
+            @Override
+            public void onNext(TextViewTextChangeEvent onTextChangeEvent) {
+                String searchParameter = onTextChangeEvent.view().getText().toString();
+
+                if (onTextChangeEvent.view().getText().length() < 4) {
+                    searchParameter = "";
+                }
+
+                mPresenter.requestData(searchParameter);
+            }
+        };
     }
 
     @Override
@@ -151,9 +207,11 @@ public class ListFragment extends BaseFragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
         mUnbinder.unbind();
     }
-
 
     @Override
     public void showData(List<NewsObject> itemList) {
@@ -189,7 +247,7 @@ public class ListFragment extends BaseFragment
     }
 
     @Override
-    public void onItemClicked(Integer position, View view, NewsObject item) {
+    public void onItemClicked(Integer position, View view, List<NewsObject> item) {
         if (mListener != null && !mInProgress) {
             mListener.onFragmentInteraction(position, view, item);
         }

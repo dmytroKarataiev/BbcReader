@@ -71,7 +71,19 @@ public class Utilities {
         }
 
         return date.getTime();
+    }
 
+    /**
+     * Returns formatted date in a String
+     * @param unformattedDate in millis
+     * @return String formatted in "MMM d, yyyy", Locale aware
+     */
+    public static String getFormattedDate(long unformattedDate) {
+
+        Date date = new Date(unformattedDate);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a, MMM d, yyyy", Locale.getDefault());
+
+        return simpleDateFormat.format(date);
     }
 
     /**
@@ -101,8 +113,8 @@ public class Utilities {
         return DateUtils.getRelativeTimeSpanString(date.getTime()).toString();
     }
 
-    public static int sBlueColor;
-    public static int sWhiteColor;
+    private static int sBlueColor;
+    private static int sWhiteColor;
 
     /**
      * Animates RecyclerView card on click with revealing effect

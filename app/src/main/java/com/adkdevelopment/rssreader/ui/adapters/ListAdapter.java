@@ -45,11 +45,13 @@ import java.util.List;
 public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
     private List<NewsObject> mNews;
-    private ItemClickListener<Integer, View, NewsObject> mListener;
+    private ItemClickListener<Integer, View, List<NewsObject>> mListener;
 
     public void setTasks(List<NewsObject> newsItems,
-                         ItemClickListener<Integer, View, NewsObject> listener) {
-        mNews = new ArrayList<>(newsItems);
+                         ItemClickListener<Integer, View, List<NewsObject>> listener) {
+        if (newsItems != null) {
+            mNews = new ArrayList<>(newsItems);
+        }
         mListener = listener;
     }
 
@@ -69,7 +71,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
             if (mListener != null) {
                 // nice reveal animation
                 Utilities.animationCard(viewHolder);
-                mListener.onItemClicked(pos, viewHolder.itemView, mNews.get(pos));
+                mListener.onItemClicked(pos, viewHolder.itemView, mNews);
             }
         });
     }

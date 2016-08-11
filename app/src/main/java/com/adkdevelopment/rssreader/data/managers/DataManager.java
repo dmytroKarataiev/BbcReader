@@ -37,6 +37,7 @@ import com.adkdevelopment.rssreader.utils.Utilities;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
@@ -128,6 +129,7 @@ public class DataManager implements Manager.DataManager {
         mRealm.where(NewsRealm.class).findAll().sort(NewsRealm.PUBDATE, Sort.DESCENDING)
                 .asObservable()
                 .subscribe(newsItems -> {
+                    //noinspection Convert2streamapi
                     for (NewsRealm each : newsItems) {
                         objects.add(convertNews(each));
                     }
@@ -157,15 +159,23 @@ public class DataManager implements Manager.DataManager {
     /**
      * Returns all matching objects to the query parameter
      *
-     * @param clazz which we are looking for
      * @param query to find all matching objects to.
-     * @param <T>   type of the object
      * @return all objects containing query
      */
-    public <T extends RealmObject> List<T> search(Class<T> clazz, String query) {
-        return mRealm.where(clazz)
-                // TODO: 8/10/16 add search
-                .contains("", query)
-                .findAll();
+    @Override
+    public Observable<List<NewsObject>> search(String query) {
+        List<NewsObject> objects = new ArrayList<>();
+        mRealm.where(NewsRealm.class)
+                .contains(NewsRealm.TITLE, query, Case.INSENSITIVE)
+                .findAll().sort(NewsRealm.PUBDATE, Sort.DESCENDING)
+                .asObservable()
+                .subscribe(newsItems -> {
+                    //noinspection Convert2streamapi
+                    for (NewsRealm each : newsItems) {
+                        objects.add(convertNews(each));
+                    }
+                });
+
+        return Observable.just(objects);
     }
 }

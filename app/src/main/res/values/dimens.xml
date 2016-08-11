@@ -25,9 +25,6 @@
 
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
     <dimen name="news_text_size">16sp</dimen>
     <dimen name="list_item_padding">8dp</dimen>
     <dimen name="padding_default">16dp</dimen>
@@ -40,9 +37,8 @@
     <dimen name="cardview_task_padding">8dp</dimen>
     <dimen name="cardview_corner_radius">4dp</dimen>
     <dimen name="news_image_size">100dp</dimen>
-    <dimen name="news_item_padding">4dp</dimen>
 
     <!-- Coordinated motion -->
-    <dimen name="offset_y">450dp</dimen>
+    <dimen name="collapsing_height">112dp</dimen>
 
 </resources>

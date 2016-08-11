@@ -70,7 +70,7 @@ public class DetailActivity extends BaseActivity implements DetailActivityContra
         mPresenter = new DetailActivityPresenter();
         mPresenter.attachView(this);
 
-        mPresenter.loadData();
+        mPresenter.loadData(getIntent());
 
         initActionBar();
 

@@ -26,7 +26,7 @@ package com.adkdevelopment.rssreader.data.managers;
 
 import android.content.Context;
 
-import com.adkdevelopment.rssreader.data.RssService;
+import com.adkdevelopment.rssreader.data.services.RssService;
 import com.adkdevelopment.rssreader.data.contracts.Manager;
 
 import retrofit2.Retrofit;
@@ -38,8 +38,6 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
  * Created by Dmytro Karataiev on 8/10/16.
  */
 public class ApiManager implements Manager.ApiManager {
-
-    private final String BASE_URL = "http://feeds.bbci.co.uk/news/";
 
     private Retrofit RSS_ADAPTER;
     private RssService RSS_SERVICE;
@@ -59,6 +57,9 @@ public class ApiManager implements Manager.ApiManager {
      * Initialises Retrofit with a BASE_URL, XML converted and Rx adapter.
      */
     private void initRetrofit() {
+
+        String BASE_URL = "http://feeds.bbci.co.uk/news/";
+
         RSS_ADAPTER = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(SimpleXmlConverterFactory.create())

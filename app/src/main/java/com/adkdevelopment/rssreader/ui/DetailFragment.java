@@ -58,6 +58,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import butterknife.internal.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,6 +79,8 @@ public class DetailFragment extends BaseFragment implements DetailFragmentContra
     TextView mTextDescription;
     @BindView(R.id.detail_link)
     TextView mTextLink;
+    @BindView(R.id.detail_date)
+    TextView mTextDate;
     @BindView(R.id.backdrop)
     ImageView mBackdrop;
     @BindView(R.id.nested_scrollview)
@@ -167,6 +170,7 @@ public class DetailFragment extends BaseFragment implements DetailFragmentContra
             });
         }
 
+        mTextDate.setText(Utilities.getFormattedDate(newsItem.getPubDate()));
         mTextTitle.setText(newsItem.getTitle());
         mTextDescription.setText(newsItem.getDescription());
         String learMore = getString(R.string.learn_more) + " " + newsItem.getLink();

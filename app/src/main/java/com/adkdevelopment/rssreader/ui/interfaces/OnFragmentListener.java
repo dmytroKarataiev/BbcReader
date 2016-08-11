@@ -28,6 +28,8 @@ import android.view.View;
 
 import com.adkdevelopment.rssreader.data.local.NewsObject;
 
+import java.util.List;
+
 /**
  * This interface must be implemented by activities that contain fragments
  * to allow an interaction in a fragment to be communicated
@@ -39,5 +41,5 @@ import com.adkdevelopment.rssreader.data.local.NewsObject;
  * Created by Dmytro Karataiev on 8/10/16.
  */
 public interface OnFragmentListener {
-    void onFragmentInteraction(Integer position, View view, NewsObject object);
+    void onFragmentInteraction(Integer position, View view, List<NewsObject> object);
 }

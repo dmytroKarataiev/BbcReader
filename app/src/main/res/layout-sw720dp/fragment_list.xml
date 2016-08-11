@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2016. Dmytro Karataiev
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/focus_thief"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <EditText xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorLighter"
+        android:hint="@string/search_articles"
+        android:imeOptions="actionDone"
+        android:inputType="textCapWords"
+        android:padding="@dimen/padding_default"
+        tools:ignore="InconsistentLayout" />
+
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/list_empty_text"
+                style="@style/EmptyListInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:padding="@dimen/padding_default"
+                android:text="@string/recyclerview_empty_text"
+                android:visibility="gone" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:padding="@dimen/list_item_padding"
+                android:scrollbars="vertical" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/progressbar_height"
+                android:layout_gravity="center"
+                android:progressDrawable="@drawable/progress_bar"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</LinearLayout>

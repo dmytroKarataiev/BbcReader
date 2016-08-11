@@ -52,8 +52,8 @@ public class ListPresenter
 
     private static final String TAG = ListPresenter.class.getSimpleName();
 
-    private CompositeSubscription mSubscription;
-    private Context mContext;
+    private final CompositeSubscription mSubscription;
+    private final Context mContext;
     private Rss mRss = null;
 
     public ListPresenter(Context context) {
@@ -78,7 +78,11 @@ public class ListPresenter
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "FindAll Error Getting: " + e);
-                        getMvpView().showError();
+                        if (e.toString().contains("collection == null")) {
+                            getMvpView().showEmpty();
+                        } else {
+                            getMvpView().showError();
+                        }
                         getMvpView().showProgress(false);
                     }
 
@@ -92,8 +96,43 @@ public class ListPresenter
                         }
                     }
                 }));
+    }
 
-        getMvpView().showProgress(false);
+    @Override
+    public void requestData(String query) {
+        checkViewAttached();
+        getMvpView().showProgress(true);
+
+        if (query.length() == 0) {
+            requestData();
+        } else {
+            mSubscription.add(App.getDataManager().search(query)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Subscriber<List<NewsObject>>() {
+                        @Override
+                        public void onCompleted() {
+                            getMvpView().showProgress(false);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e(TAG, "Search Error Getting: " + e);
+                            getMvpView().showError();
+                            getMvpView().showProgress(false);
+                        }
+
+                        @Override
+                        public void onNext(List<NewsObject> realmObjects) {
+                            if (realmObjects != null && realmObjects.size() > 0) {
+                                getMvpView().showData(realmObjects);
+                            } else {
+                                getMvpView().showEmpty();
+                                fetchData();
+                            }
+                        }
+                    }));
+        }
     }
 
     @Override
@@ -113,7 +152,7 @@ public class ListPresenter
 
                         @Override
                         public void onError(Throwable e) {
-                            Log.e(TAG, "GetNews Error Getting: " + e);
+                            Log.e(TAG, "Fetch Error Getting: " + e);
                         }
 
                         @Override
@@ -157,7 +196,7 @@ public class ListPresenter
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
+        if (!mSubscription.isUnsubscribed()) {
             mSubscription.unsubscribe();
         }
     }

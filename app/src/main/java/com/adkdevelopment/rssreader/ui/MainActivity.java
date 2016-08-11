@@ -42,6 +42,9 @@ import com.adkdevelopment.rssreader.ui.contracts.MainContract;
 import com.adkdevelopment.rssreader.ui.interfaces.OnFragmentListener;
 import com.adkdevelopment.rssreader.ui.presenters.MainPresenter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -85,14 +88,11 @@ public class MainActivity extends BaseActivity
     private void initActionBar() {
 
         // Set up ActionBar and corresponding icons
-        mToolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment);
-                if (fragment != null && fragment instanceof ListFragment) {
-                    ((ListFragment) fragment).scrollToTop();
-                }
+        mToolbar.setOnClickListener(view -> {
+            Fragment fragment = getSupportFragmentManager()
+                    .findFragmentById(R.id.fragment);
+            if (fragment != null && fragment instanceof ListFragment) {
+                ((ListFragment) fragment).scrollToTop();
             }
         });
         setSupportActionBar(mToolbar);
@@ -110,10 +110,11 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onFragmentInteraction(Integer position, View view, NewsObject item) {
+    public void onFragmentInteraction(Integer position, View view, List<NewsObject> item) {
         if (!mTwoPane) {
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(NewsRealm.NEWS_POSITION, position);
+            intent.putExtra(NewsRealm.NEWS_EXTRA, (ArrayList) item);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Pair pair = Pair.create(view.findViewById(R.id.task_item_card),
@@ -127,8 +128,8 @@ public class MainActivity extends BaseActivity
             }
         } else {
             Bundle args = new Bundle();
-            args.putParcelable(NewsRealm.NEWS_EXTRA, item);
-            DetailFragment fragment = DetailFragment.newInstance(item);
+            args.putParcelable(NewsRealm.NEWS_EXTRA, item.get(position));
+            DetailFragment fragment = DetailFragment.newInstance(item.get(position));
             fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.item_detail_container, fragment)

@@ -27,7 +27,7 @@ package com.adkdevelopment.rssreader.data.contracts;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.adkdevelopment.rssreader.data.RssService;
+import com.adkdevelopment.rssreader.data.services.RssService;
 import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.data.remote.Item;
@@ -65,7 +65,7 @@ public interface Manager {
 
         Observable<List<NewsRealm>> addBulk(List<Item> list);
 
-        <T extends RealmObject> List<T> search(Class<T> clazz, String query);
+        Observable<List<NewsObject>> search(String query);
     }
 
     /**

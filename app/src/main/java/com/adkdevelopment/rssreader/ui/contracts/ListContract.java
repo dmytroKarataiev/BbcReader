@@ -39,6 +39,8 @@ public class ListContract {
     public interface Presenter extends MvpPresenter<View> {
         void requestData();
 
+        void requestData(String query);
+
         void fetchData();
     }
 

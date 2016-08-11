@@ -30,7 +30,6 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/cardview_height"
     android:layout_marginBottom="@dimen/cardview_task_padding"
-    android:background="@android:color/white"
     android:transitionName="@string/transition_card"
     app:cardCornerRadius="@dimen/cardview_corner_radius"
     tools:targetApi="lollipop">
@@ -81,8 +80,7 @@
             android:paddingEnd="@dimen/padding_default"
             android:paddingLeft="@dimen/padding_default"
             android:paddingRight="@dimen/padding_default"
-            android:paddingBottom="@dimen/cardview_task_padding"
-            android:text="Sept, 27th, 2016" />
+            android:paddingBottom="@dimen/cardview_task_padding" />
 
     </RelativeLayout>
 

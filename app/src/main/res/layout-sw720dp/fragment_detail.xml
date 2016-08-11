@@ -53,18 +53,26 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/backdrop"
             android:padding="@dimen/padding_default"
-            android:text="@string/hello_blank_fragment"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+        <TextView
+            android:id="@+id/detail_date"
+            android:layout_below="@id/detail_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/padding_default"
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
         <TextView
             android:id="@+id/detail_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/detail_title"
+            android:layout_below="@id/detail_date"
             android:paddingBottom="@dimen/padding_default"
             android:paddingLeft="@dimen/padding_default"
             android:paddingRight="@dimen/padding_default"
-            android:text="@string/hello_blank_fragment"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <TextView
