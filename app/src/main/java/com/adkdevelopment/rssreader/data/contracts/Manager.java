@@ -52,6 +52,14 @@ public interface Manager {
      */
     interface PrefsManager extends Manager {
         SharedPreferences getSharedPrefs();
+
+        boolean receiveNotifications();
+
+        long getLastNotification();
+
+        void setLastNotification();
+
+        int getSyncInterval();
     }
 
     /**

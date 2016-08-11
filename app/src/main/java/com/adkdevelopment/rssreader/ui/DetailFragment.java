@@ -58,7 +58,6 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import butterknife.internal.Utils;
 
 /**
  * A simple {@link Fragment} subclass.

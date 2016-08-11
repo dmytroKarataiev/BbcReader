@@ -33,7 +33,4 @@ import com.adkdevelopment.rssreader.ui.contracts.MainContract;
  */
 public class MainPresenter extends BaseMvpPresenter<MainContract.View>
         implements MainContract.Presenter {
-
-    private static final String TAG = MainPresenter.class.getSimpleName();
-
 }

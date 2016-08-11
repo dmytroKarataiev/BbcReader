@@ -25,7 +25,7 @@
 <resources>
     <string name="app_name">Rss Reader</string>
     <string name="share">Share</string>
-
+    <string name="menu_button_settings">Settings</string>
     <string name="recyclerview_empty_text">Oops! Something is wrong. Please check your internet connection and try again.</string>
     <string name="fragment_error">Error somewhere</string>
 
@@ -36,5 +36,38 @@
 
     <string name="learn_more">Learn more:</string>
     <string name="search_articles">Search for articles</string>
+    <string name="articles_notification">Check out more news in the reader!</string>
+
+    <!-- Shared Preferences Keys -->
+    <string name="sharedprefs_key_notifications" translatable="false">notif</string>
+    <string name="sharedprefs_key_lastnotification" translatable="false">last_notification</string>
+    <string name="sharedprefs_key_syncfrequency" translatable="false">sync-frequency</string>
+
+    <!-- Settings Activity -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_header_sync">Sync frequency</string>
+    <string name="settings_title_notifications">Notifications</string>
+    <string-array name="settings_sync_titles">
+        <item>1 minute</item>
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>12 hours</item>
+        <item>24 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="settings_sync_values">
+        <item>60</item>
+        <item>900</item>
+        <item>1800</item>
+        <item>3600</item>
+        <item>7200</item>
+        <item>14400</item>
+        <item>28800</item>
+        <item>57600</item>
+        <item>-1</item>
+    </string-array>
 
 </resources>

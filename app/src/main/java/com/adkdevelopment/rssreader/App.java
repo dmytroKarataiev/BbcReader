@@ -24,12 +24,20 @@
 
 package com.adkdevelopment.rssreader;
 
+import android.annotation.TargetApi;
 import android.app.Application;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
+import android.os.Build;
+import android.text.format.DateUtils;
+import android.util.Log;
 
 import com.adkdevelopment.rssreader.data.managers.ApiManager;
 import com.adkdevelopment.rssreader.data.managers.DataManager;
 import com.adkdevelopment.rssreader.data.managers.PreferenceManager;
+import com.adkdevelopment.rssreader.data.services.FetchJobService;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -40,17 +48,21 @@ import io.realm.RealmConfiguration;
  */
 public class App extends Application {
 
+    private static final String TAG = App.class.getSimpleName();
+
     private static Context sContext;
 
     private static DataManager sDataManager;
     private static ApiManager sApiManager;
     private static PreferenceManager sSharedPrefManager;
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCreate() {
         super.onCreate();
         sContext = getApplicationContext();
         setupRealmDefaultInstance();
+        scheduleJob();
     }
 
     /**
@@ -117,4 +129,23 @@ public class App extends Application {
         sSharedPrefManager.clear();
     }
 
+    /**
+     * Schedules a Job to update news and send notifications.
+     */
+    private void scheduleJob() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int JOB_ID = 123;
+            ComponentName serviceName = new ComponentName(this, FetchJobService.class);
+            JobInfo jobInfo = new JobInfo.Builder(JOB_ID, serviceName)
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .setPeriodic(getSharedPrefManager().getSyncInterval() * DateUtils.MINUTE_IN_MILLIS)
+                    .setPersisted(true)
+                    .build();
+            JobScheduler scheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+            int result = scheduler.schedule(jobInfo);
+            if (result == JobScheduler.RESULT_SUCCESS) {
+                Log.v(TAG, "Job scheduled successfully!");
+            }
+        }
+    }
 }

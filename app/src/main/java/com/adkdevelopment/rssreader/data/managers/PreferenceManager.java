@@ -27,6 +27,7 @@ package com.adkdevelopment.rssreader.data.managers;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.adkdevelopment.rssreader.R;
 import com.adkdevelopment.rssreader.data.contracts.Manager;
 
 /**
@@ -39,7 +40,6 @@ public class PreferenceManager implements Manager.PrefsManager {
     private static Context sContext;
 
     public PreferenceManager() {
-
     }
 
     @Override
@@ -56,5 +56,51 @@ public class PreferenceManager implements Manager.PrefsManager {
     @Override
     public SharedPreferences getSharedPrefs() {
         return sPref;
+    }
+
+    /**
+     * Returns true is user wants to receive notifications,
+     * false otherwise.
+     * @return boolean to send notifications.
+     */
+    @Override
+    public boolean receiveNotifications() {
+        return getSharedPrefs()
+                .getBoolean(sContext.getString(R.string.sharedprefs_key_notifications), true);
+    }
+
+    /**
+     * Returns time in long of last issued notification.
+     * @return long time of last notification.
+     */
+    @Override
+    public long getLastNotification() {
+        return getSharedPrefs()
+                .getLong(sContext.getString(R.string.sharedprefs_key_lastnotification),
+                        System.currentTimeMillis());
+    }
+
+    /**
+     * Sets last notification date to current time.
+     */
+    @Override
+    public void setLastNotification() {
+        getSharedPrefs()
+                .edit()
+                .putLong(sContext.getString(R.string.sharedprefs_key_lastnotification),
+                        System.currentTimeMillis())
+                .apply();
+    }
+
+    /**
+     * Method to get SyncInterval from SharedPreferences
+     * @return interval in minutes
+     */
+    @Override
+    public int getSyncInterval() {
+        String syncFrequency = getSharedPrefs()
+                .getString(sContext.getString(R.string.sharedprefs_key_syncfrequency), "7200");
+
+        return Integer.parseInt(syncFrequency);
     }
 }
