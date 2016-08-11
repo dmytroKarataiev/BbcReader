@@ -23,7 +23,7 @@
   -->
 
 <resources>
-    <string name="app_name">Rss Reader</string>
+    <string name="app_name">BBC Reader</string>
     <string name="share">Share</string>
     <string name="menu_button_settings">Settings</string>
     <string name="recyclerview_empty_text">Oops! Something is wrong. Please check your internet connection and try again.</string>

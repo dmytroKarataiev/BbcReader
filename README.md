@@ -1,9 +1,10 @@
-# RssReader
-![Animation of the app]()
+# Rss Reader for the BBC News feed
+![Animation of the app](materials/animation.gif)
 
-Rss feed reader for a BBC network news feed. Works fast, utilises MVP architecture and several modern libraries to perform REST work, image downloading and caching.
+Rss feed reader for the BBC network news feed. Works fast, utilises MVP architecture and several modern libraries to perform REST work, image downloading and caching.
+* Screenshots of a current state - [phone and tablet Screenshots](materials/).
 
-# Requirements
+## Requirements
 * [Specifications](materials/Android Developer Interview Assignment.pdf).
 * To be simple enough to make it under 8 hours - this caused me to make several sacrifices:
   * Realm instead of SQLite, therefore inability to use a ContentProvider.
@@ -11,7 +12,7 @@ Rss feed reader for a BBC network news feed. Works fast, utilises MVP architectu
 * API to get data in XML format: [BBC](http://feeds.bbci.co.uk/news/rss.xml)
 * Tablet Design.
 
-# Features
+## Features
 * Used MVP Architecture for the app.
 * Realm Database for caching and storing the data.
 * Accessibility features: RTL, content descriptions, empty TextView when there are no articles.
@@ -22,17 +23,19 @@ Rss feed reader for a BBC network news feed. Works fast, utilises MVP architectu
 * Scroll to the top by clicking the ActionBar.
 * Palette to have a nice-looking design.
 * For API 21+ - auto-updates in background with notifications (JobScheduler).
+* Market (without BBC logos) and Local (BBC branded) flavors.
 
-# Libraries
+## Libraries
 * [Realm](https://realm.io) - fast and efficient database, which dramatically increases a speed of development.
 * [Butterknife](http://jakewharton.github.io/butterknife/) - boilerplate code cutter, improves speed of development, makes code easier to read.
 * [Retrofit](http://square.github.io/retrofit/) - basically the standard in the Android development for all REST-related works.
 * [RxJava](https://github.com/ReactiveX/RxAndroid), [Retrolambda](https://github.com/evant/gradle-retrolambda) - most modern way to manage streams of data and asynctasks and a plugin to make us of nice Java 8 lambda syntax.
 * [Picasso](http://square.github.io/picasso/) - one of the best image downloading and caching libraries for Android, increases speed of development.
 
-# Used materials
+## Used materials
 * BBC Icon - [www.iconarchive.com](http://www.iconarchive.com/show/circle-icons-by-martz90/bbc-news-icon.html).
 * BBC Logo - [wikimedia.org](https://upload.wikimedia.org/wikipedia/commons/e/eb/BBC.svg).
+* RSS Font Awesome - [wikimedia.org](https://upload.wikimedia.org/wikipedia/commons/d/dc/Rss_font_awesome.svg).
 
 License
 -------
