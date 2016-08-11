@@ -1,4 +1,6 @@
 # Rss Reader for the BBC News feed
+<a href="https://play.google.com/store/apps/details?id=com.adkdevelopment.rssreader"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" width="185" height="60"/></a><br>
+
 ![Animation of the app](materials/animation.gif)
 
 Rss feed reader for the BBC network news feed. Works fast, utilises MVP architecture and several modern libraries to perform REST work, image downloading and caching.
@@ -29,7 +31,7 @@ Rss feed reader for the BBC network news feed. Works fast, utilises MVP architec
 * [Realm](https://realm.io) - fast and efficient database, which dramatically increases a speed of development.
 * [Butterknife](http://jakewharton.github.io/butterknife/) - boilerplate code cutter, improves speed of development, makes code easier to read.
 * [Retrofit](http://square.github.io/retrofit/) - basically the standard in the Android development for all REST-related works.
-* [RxJava](https://github.com/ReactiveX/RxAndroid), [Retrolambda](https://github.com/evant/gradle-retrolambda) - most modern way to manage streams of data and asynctasks and a plugin to make us of nice Java 8 lambda syntax.
+* [RxJava](https://github.com/ReactiveX/RxAndroid), [Retrolambda](https://github.com/evant/gradle-retrolambda) - the most modern way to manage streams of data and asynctasks and a plugin to make use of nice Java 8 lambda syntax.
 * [Picasso](http://square.github.io/picasso/) - one of the best image downloading and caching libraries for Android, increases speed of development.
 
 ## Used materials
