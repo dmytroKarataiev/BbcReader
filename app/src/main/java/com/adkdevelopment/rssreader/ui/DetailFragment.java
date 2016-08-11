@@ -27,8 +27,13 @@ package com.adkdevelopment.rssreader.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -37,8 +42,8 @@ import android.widget.TextView;
 import com.adkdevelopment.rssreader.R;
 import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.ui.base.BaseFragment;
-import com.adkdevelopment.rssreader.ui.contracts.DetailContract;
-import com.adkdevelopment.rssreader.ui.presenters.DetailPresenter;
+import com.adkdevelopment.rssreader.ui.contracts.DetailFragmentContract;
+import com.adkdevelopment.rssreader.ui.presenters.DetailFragmentPresenter;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -52,11 +57,12 @@ import butterknife.Unbinder;
  *
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class DetailFragment extends BaseFragment implements DetailContract.View {
+public class DetailFragment extends BaseFragment implements DetailFragmentContract.View {
 
     private static final String TAG = DetailFragment.class.getSimpleName();
 
-    private DetailPresenter mPresenter;
+    private DetailFragmentPresenter mPresenter;
+    private ShareActionProvider mShareActionProvider;
 
     @BindView(R.id.detail_title)
     TextView mTextTitle;
@@ -92,9 +98,11 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
+        setHasOptionsMenu(true);
+
         mUnbinder = ButterKnife.bind(this, rootView);
 
-        mPresenter = new DetailPresenter();
+        mPresenter = new DetailFragmentPresenter();
         mPresenter.attachView(this);
 
         return rootView;
@@ -141,5 +149,21 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
         mUnbinder.unbind();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_detail, menu);
+        // Retrieve the share menu item
+        MenuItem item = menu.findItem(R.id.share);
+
+        // Get the provider and hold onto it to set/change the share intent.
+        mShareActionProvider =
+                (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(mPresenter.getShareIntent());
+        } else {
+            Log.e(TAG, "fail to set a share intent");
+        }
+    }
 }
 

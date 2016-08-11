@@ -22,12 +22,33 @@
  * SOFTWARE.
  */
 
-package com.adkdevelopment.rssreader.ui.interfaces;
+package com.adkdevelopment.rssreader.ui.contracts;
+
+import android.content.Intent;
+import android.os.Bundle;
+
+import com.adkdevelopment.rssreader.data.local.NewsObject;
+import com.adkdevelopment.rssreader.ui.base.MvpPresenter;
+import com.adkdevelopment.rssreader.ui.base.MvpView;
 
 /**
- * Controls clicks in fragments
+ * MVP contract for Details Activity and Fragment.
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public interface ItemClickListener<M, V, P> {
-    void onItemClicked(M position, V view, P item);
+public class DetailFragmentContract {
+
+    public interface Presenter extends MvpPresenter<View> {
+        void loadData(Intent intent);
+
+        void loadData(Bundle bundle);
+
+        Intent getShareIntent();
+    }
+
+    public interface View extends MvpView {
+        void showData(NewsObject newsItem);
+
+        void showError();
+    }
+
 }

@@ -35,9 +35,8 @@ import com.adkdevelopment.rssreader.ui.interfaces.ItemClickListener;
 import com.adkdevelopment.rssreader.ui.viewholders.ListViewHolder;
 import com.adkdevelopment.rssreader.utils.Utilities;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.internal.Utils;
 
 /**
  * Adapter to show all news in a RecyclerView.
@@ -46,14 +45,13 @@ import butterknife.internal.Utils;
 public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
     private List<NewsObject> mNews;
-    private ItemClickListener<Integer, View> mListener;
+    private ItemClickListener<Integer, View, NewsObject> mListener;
 
     public void setTasks(List<NewsObject> newsItems,
-                         ItemClickListener<Integer, View> listener) {
-        mNews = newsItems;
+                         ItemClickListener<Integer, View, NewsObject> listener) {
+        mNews = new ArrayList<>(newsItems);
         mListener = listener;
     }
-
 
     @Override
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -71,10 +69,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
             if (mListener != null) {
                 // nice reveal animation
                 Utilities.animationCard(viewHolder);
-                mListener.onItemClicked(pos, viewHolder.itemView);
+                mListener.onItemClicked(pos, viewHolder.itemView, mNews.get(pos));
             }
         });
-
     }
 
     @Override

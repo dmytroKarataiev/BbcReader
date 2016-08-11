@@ -33,6 +33,7 @@
     <dimen name="padding_default">16dp</dimen>
     <dimen name="progressbar_height">150dp</dimen>
     <dimen name="detail_backdrop_height">256dp</dimen>
+    <dimen name="detail_max_height">300dp</dimen>
 
     <!-- News Item dimensions -->
     <dimen name="cardview_height">80dp</dimen>

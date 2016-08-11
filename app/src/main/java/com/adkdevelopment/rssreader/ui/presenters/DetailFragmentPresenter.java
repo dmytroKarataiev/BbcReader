@@ -30,15 +30,15 @@ import android.os.Bundle;
 import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.ui.base.BaseMvpPresenter;
-import com.adkdevelopment.rssreader.ui.contracts.DetailContract;
+import com.adkdevelopment.rssreader.ui.contracts.DetailFragmentContract;
 
 /**
  * Presenter for a DetailFragment.
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class DetailPresenter
-        extends BaseMvpPresenter<DetailContract.View>
-        implements DetailContract.Presenter {
+public class DetailFragmentPresenter
+        extends BaseMvpPresenter<DetailFragmentContract.View>
+        implements DetailFragmentContract.Presenter {
 
     private NewsObject mNewsItem;
 
@@ -62,7 +62,10 @@ public class DetailPresenter
         }
     }
 
-    // TODO: 8/10/16 fix 
+    /**
+     * Creates a share intent for the ShareActionProvider with details about news.
+     * @return Intent with extra info about news.
+     */
     @Override
     public Intent getShareIntent() {
         Intent sendIntent = new Intent(Intent.ACTION_SEND);

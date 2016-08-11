@@ -59,9 +59,7 @@ import butterknife.Unbinder;
  * Created by Dmytro Karataiev on 8/10/16.
  */
 public class ListFragment extends BaseFragment
-        implements ListContract.View, ItemClickListener<Integer, View> {
-
-    private static final String TAG = ListFragment.class.getSimpleName();
+        implements ListContract.View, ItemClickListener<Integer, View, NewsObject> {
 
     private ListPresenter mPresenter;
     private ListAdapter mAdapter;
@@ -71,7 +69,7 @@ public class ListFragment extends BaseFragment
     // to prevent NPE with SharedTransitions while updating the data
     private boolean mInProgress;
 
-    // Because of using a Presenter - we have to save position of a RecyclerView manually
+    // Due to using Presenter - we have to save position of a RecyclerView manually
     public static final String POSITION = "pos";
     private int mPosition = 0;
 
@@ -84,6 +82,8 @@ public class ListFragment extends BaseFragment
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
     private Unbinder mUnbinder;
+
+    private static final String TAG = ListFragment.class.getSimpleName();
 
     public ListFragment() {
         // Required empty public constructor
@@ -124,6 +124,7 @@ public class ListFragment extends BaseFragment
         });
 
         mPresenter.requestData();
+        mPresenter.fetchData();
 
         return rootView;
 
@@ -188,9 +189,9 @@ public class ListFragment extends BaseFragment
     }
 
     @Override
-    public void onItemClicked(Integer item, View view) {
+    public void onItemClicked(Integer position, View view, NewsObject item) {
         if (mListener != null && !mInProgress) {
-            mListener.onFragmentInteraction(item, view);
+            mListener.onFragmentInteraction(position, view, item);
         }
     }
 

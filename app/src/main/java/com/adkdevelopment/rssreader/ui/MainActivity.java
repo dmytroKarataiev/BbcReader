@@ -34,6 +34,7 @@ import android.util.Pair;
 import android.view.View;
 
 import com.adkdevelopment.rssreader.R;
+import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.ui.base.BaseActivity;
 import com.adkdevelopment.rssreader.ui.contracts.MainContract;
@@ -98,10 +99,10 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onFragmentInteraction(Integer item, View view) {
+    public void onFragmentInteraction(Integer position, View view, NewsObject item) {
         if (!mTwoPane) {
             Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra(NewsRealm.NEWS_POSITION, item);
+            intent.putExtra(NewsRealm.NEWS_POSITION, position);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Pair pair = Pair.create(view.findViewById(R.id.task_item_card),
@@ -113,6 +114,14 @@ public class MainActivity extends BaseActivity
             } else {
                 startActivity(intent);
             }
+        } else {
+            Bundle args = new Bundle();
+            args.putParcelable(NewsRealm.NEWS_EXTRA, item);
+            DetailFragment fragment = DetailFragment.newInstance(item);
+            fragment.setArguments(args);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.item_detail_container, fragment)
+                    .commit();
         }
     }
 }
