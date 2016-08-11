@@ -28,6 +28,7 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
@@ -84,6 +85,16 @@ public class MainActivity extends BaseActivity
     private void initActionBar() {
 
         // Set up ActionBar and corresponding icons
+        mToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment);
+                if (fragment != null && fragment instanceof ListFragment) {
+                    ((ListFragment) fragment).scrollToTop();
+                }
+            }
+        });
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

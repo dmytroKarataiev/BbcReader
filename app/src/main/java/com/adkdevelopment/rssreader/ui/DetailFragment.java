@@ -24,11 +24,16 @@
 
 package com.adkdevelopment.rssreader.ui;
 
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.ShareActionProvider;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,6 +41,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,6 +51,8 @@ import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.ui.base.BaseFragment;
 import com.adkdevelopment.rssreader.ui.contracts.DetailFragmentContract;
 import com.adkdevelopment.rssreader.ui.presenters.DetailFragmentPresenter;
+import com.adkdevelopment.rssreader.utils.Utilities;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -62,7 +71,6 @@ public class DetailFragment extends BaseFragment implements DetailFragmentContra
     private static final String TAG = DetailFragment.class.getSimpleName();
 
     private DetailFragmentPresenter mPresenter;
-    private ShareActionProvider mShareActionProvider;
 
     @BindView(R.id.detail_title)
     TextView mTextTitle;
@@ -72,6 +80,8 @@ public class DetailFragment extends BaseFragment implements DetailFragmentContra
     TextView mTextLink;
     @BindView(R.id.backdrop)
     ImageView mBackdrop;
+    @BindView(R.id.nested_scrollview)
+    NestedScrollView mNestedScroll;
     private Unbinder mUnbinder;
 
     public DetailFragment() {
@@ -123,7 +133,38 @@ public class DetailFragment extends BaseFragment implements DetailFragmentContra
 
         //ImageView backdrop = ButterKnife.findById(getActivity(), R.id.backdrop);
         if (mBackdrop != null) {
-            Picasso.with(getContext()).load(newsItem.getThumbnail()).into(mBackdrop);
+            Picasso.with(getContext()).load(newsItem.getThumbnail()).into(mBackdrop, new Callback() {
+                @Override
+                public void onSuccess() {
+                    // makes detail view colored according to the image palette
+                    if (mBackdrop != null) {
+                        BitmapDrawable drawable = (BitmapDrawable) mBackdrop.getDrawable();
+
+                        int[] palette = Utilities.getPalette(drawable);
+                        mNestedScroll.setBackgroundColor(palette[0]);
+                        CollapsingToolbarLayout toolbarLayout =
+                                ButterKnife.findById(getActivity(), R.id.collapsing_toolbar);
+                        if (toolbarLayout != null) {
+                            toolbarLayout.setContentScrimColor(palette[1]);
+                        }
+
+                        Toolbar toolbar = ButterKnife.findById(getActivity(), R.id.toolbar);
+                        toolbar.setBackgroundColor(palette[2]);
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            Window window = getActivity().getWindow();
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            window.setStatusBarColor(palette[2]);
+                        }
+                    }
+                }
+
+                @Override
+                public void onError() {
+                    Log.e(TAG, "onError: no image");
+                }
+            });
         }
 
         mTextTitle.setText(newsItem.getTitle());
@@ -156,8 +197,8 @@ public class DetailFragment extends BaseFragment implements DetailFragmentContra
         MenuItem item = menu.findItem(R.id.share);
 
         // Get the provider and hold onto it to set/change the share intent.
-        mShareActionProvider =
-                (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        ShareActionProvider mShareActionProvider = (ShareActionProvider)
+                MenuItemCompat.getActionProvider(item);
 
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(mPresenter.getShareIntent());

@@ -211,4 +211,12 @@ public class ListFragment extends BaseFragment
         }
     }
 
+    /**
+     * Helper method which is called from PagerActivity when press on TabLayout twice
+     * Scrolls the screen to the top
+     */
+    public void scrollToTop() {
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
 }

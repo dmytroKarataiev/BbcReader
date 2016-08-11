@@ -27,10 +27,12 @@ package com.adkdevelopment.rssreader.utils;
 import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -162,5 +164,35 @@ public class Utilities {
             return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         }
         return false;
+    }
+
+    /**
+     * Retrieves palette from a drawable and returns colors.
+     * @param drawable to get palette from.
+     * @return int[] with 3 colors.
+     */
+    public static int[] getPalette(BitmapDrawable drawable) {
+
+        int[] colors = new int[]{0, 0, 0};
+        if (drawable != null) {
+            Palette palette = Palette.from(drawable.getBitmap()).generate();
+
+            colors[0] = palette.getLightVibrantColor(0);
+            if (colors[0] == 0) {
+                colors[0] = palette.getLightMutedColor(0);
+            }
+
+            colors[1] = palette.getVibrantColor(0);
+            if (colors[1] == 0) {
+                colors[1] = palette.getMutedColor(0);
+            }
+
+            colors[2] = palette.getDarkVibrantColor(0);
+            if (colors[2] == 0) {
+                colors[2] = palette.getDarkMutedColor(0);
+            }
+        }
+
+        return colors;
     }
 }
