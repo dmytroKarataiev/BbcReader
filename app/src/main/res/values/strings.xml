@@ -52,12 +52,14 @@
         <item>15 minutes</item>
         <item>30 minutes</item>
         <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>12 hours</item>
+        <item>2 hours</item>
+        <item>4 hours</item>
+        <item>8 hours</item>
+        <item>16 hours</item>
         <item>24 hours</item>
         <item>Never</item>
     </string-array>
+    <!-- Values in seconds -->
     <string-array name="settings_sync_values">
         <item>60</item>
         <item>900</item>
@@ -67,6 +69,7 @@
         <item>14400</item>
         <item>28800</item>
         <item>57600</item>
+        <item>86400</item>
         <item>-1</item>
     </string-array>
 

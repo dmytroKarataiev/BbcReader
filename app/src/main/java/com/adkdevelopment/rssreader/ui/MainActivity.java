@@ -57,6 +57,8 @@ import butterknife.ButterKnife;
  */
 public class MainActivity extends BaseActivity
         implements MainContract.View, OnFragmentListener {
+    
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private MainPresenter mPresenter;
 
@@ -72,8 +74,9 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mPresenter = new MainPresenter();
+        mPresenter = new MainPresenter(getBaseContext());
         mPresenter.attachView(this);
+        mPresenter.scheduleJob();
 
         initActionBar();
 

@@ -76,8 +76,7 @@ public class PreferenceManager implements Manager.PrefsManager {
     @Override
     public long getLastNotification() {
         return getSharedPrefs()
-                .getLong(sContext.getString(R.string.sharedprefs_key_lastnotification),
-                        System.currentTimeMillis());
+                .getLong(sContext.getString(R.string.sharedprefs_key_lastnotification), 0);
     }
 
     /**
