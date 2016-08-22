@@ -34,23 +34,24 @@ import com.adkdevelopment.rssreader.data.contracts.Manager;
  * SharedPreferences manager.
  * Created by Dmytro Karataiev on 8/10/16.
  */
-public class PreferenceManager implements Manager.PrefsManager {
+public class PrefsManager implements Manager.PrefsManager {
 
-    private static SharedPreferences sPref;
-    private static Context sContext;
+    private final SharedPreferences sPref;
+    private final Context mContext;
 
-    public PreferenceManager() {
+    public PrefsManager(Context context) {
+        mContext = context;
+        sPref = android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
     @Override
-    public void init(Context context) {
-        sPref = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
-        sContext = context;
+    public void init() {
     }
 
     @Override
     public void clear() {
         sPref.edit().clear().apply();
+
     }
 
     @Override
@@ -61,22 +62,24 @@ public class PreferenceManager implements Manager.PrefsManager {
     /**
      * Returns true is user wants to receive notifications,
      * false otherwise.
+     *
      * @return boolean to send notifications.
      */
     @Override
     public boolean receiveNotifications() {
         return getSharedPrefs()
-                .getBoolean(sContext.getString(R.string.sharedprefs_key_notifications), true);
+                .getBoolean(mContext.getString(R.string.sharedprefs_key_notifications), true);
     }
 
     /**
      * Returns time in long of last issued notification.
+     *
      * @return long time of last notification.
      */
     @Override
     public long getLastNotification() {
         return getSharedPrefs()
-                .getLong(sContext.getString(R.string.sharedprefs_key_lastnotification), 0);
+                .getLong(mContext.getString(R.string.sharedprefs_key_lastnotification), 0);
     }
 
     /**
@@ -86,19 +89,20 @@ public class PreferenceManager implements Manager.PrefsManager {
     public void setLastNotification() {
         getSharedPrefs()
                 .edit()
-                .putLong(sContext.getString(R.string.sharedprefs_key_lastnotification),
+                .putLong(mContext.getString(R.string.sharedprefs_key_lastnotification),
                         System.currentTimeMillis())
                 .apply();
     }
 
     /**
      * Method to get SyncInterval from SharedPreferences
+     *
      * @return interval in minutes
      */
     @Override
     public int getSyncInterval() {
         String syncFrequency = getSharedPrefs()
-                .getString(sContext.getString(R.string.sharedprefs_key_syncfrequency), "7200");
+                .getString(mContext.getString(R.string.sharedprefs_key_syncfrequency), "7200");
 
         return Integer.parseInt(syncFrequency);
     }

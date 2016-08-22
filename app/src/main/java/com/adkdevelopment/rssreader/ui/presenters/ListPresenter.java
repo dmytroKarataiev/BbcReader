@@ -29,7 +29,6 @@ import android.util.Log;
 
 import com.adkdevelopment.rssreader.App;
 import com.adkdevelopment.rssreader.data.local.NewsObject;
-import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.data.remote.Rss;
 import com.adkdevelopment.rssreader.ui.base.BaseMvpPresenter;
 import com.adkdevelopment.rssreader.ui.contracts.ListContract;
@@ -96,6 +95,7 @@ public class ListPresenter
                         }
                     }
                 }));
+
     }
 
     @Override
@@ -174,7 +174,7 @@ public class ListPresenter
             mSubscription.add(App.getDataManager().addBulk(mRss.getChannel().getItem())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Subscriber<List<NewsRealm>>() {
+                    .subscribe(new Subscriber<Boolean>() {
                         @Override
                         public void onCompleted() {
                             requestData();
@@ -187,7 +187,7 @@ public class ListPresenter
                         }
 
                         @Override
-                        public void onNext(List<NewsRealm> itemList) {
+                        public void onNext(Boolean added) {
                         }
                     }));
         }

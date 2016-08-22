@@ -24,7 +24,6 @@
 
 package com.adkdevelopment.rssreader.data.managers;
 
-import android.content.Context;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -53,19 +52,12 @@ public class DataManager implements Manager.DataManager {
 
     private static final String TAG = DataManager.class.getSimpleName();
 
-    private Realm mRealm;
-
     @Override
-    public void init(Context context) {
-        mRealm = getRealmInstance();
+    public void init() {
     }
 
     @Override
     public void clear() {
-    }
-
-    private Realm getRealmInstance() {
-        return Realm.getDefaultInstance();
     }
 
     /**
@@ -76,30 +68,31 @@ public class DataManager implements Manager.DataManager {
      */
     @Override
     public <T extends RealmObject> T addTask(T model) {
-        Realm realm = getRealmInstance();
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(model);
         realm.commitTransaction();
+        realm.close();
         return model;
     }
 
     /**
      * Adds data in bulk to the database.
+     *
      * @param list of objects to add to the DB.
      * @return Observable of added and converted to Realm Object items.
      */
     @Override
-    public Observable<List<NewsRealm>> addBulk(final List<Item> list) {
-        return Observable.create(new Observable.OnSubscribe<List<NewsRealm>>() {
+    public Observable<Boolean> addBulk(final List<Item> list) {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
 
             @Override
-            public void call(Subscriber<? super List<NewsRealm>> subscriber) {
+            public void call(Subscriber<? super Boolean> subscriber) {
                 try {
-                    List<NewsRealm> realmList = new ArrayList<>();
                     for (Item each : list) {
-                        realmList.add(addTask(Utilities.convertNews(each)));
+                        addTask(Utilities.convertNews(each));
                     }
-                    subscriber.onNext(realmList);
+                    subscriber.onNext(true);
                     subscriber.onCompleted();
                 } catch (Exception e) {
                     Log.e(TAG, "Error: " + e);
@@ -118,28 +111,30 @@ public class DataManager implements Manager.DataManager {
     public Observable<List<NewsObject>> findAll() {
 
         // Delete news older than 24 hours.
-        RealmResults<NewsRealm> resultsDelete = mRealm.where(NewsRealm.class)
+
+        Realm mRealm = Realm.getDefaultInstance();
+
+        RealmResults<NewsRealm> results = mRealm.where(NewsRealm.class)
                 .lessThan(NewsRealm.PUBDATE, System.currentTimeMillis() - DateUtils.DAY_IN_MILLIS)
                 .findAll();
         mRealm.beginTransaction();
-        resultsDelete.deleteAllFromRealm();
+        results.deleteAllFromRealm();
         mRealm.commitTransaction();
 
         List<NewsObject> objects = new ArrayList<>();
-        mRealm.where(NewsRealm.class).findAll().sort(NewsRealm.PUBDATE, Sort.DESCENDING)
-                .asObservable()
-                .subscribe(newsItems -> {
-                    //noinspection Convert2streamapi
-                    for (NewsRealm each : newsItems) {
-                        objects.add(convertNews(each));
-                    }
-                });
+        results = mRealm.where(NewsRealm.class).findAll().sort(NewsRealm.PUBDATE, Sort.DESCENDING);
+        //noinspection Convert2streamapi
+        for (NewsRealm each : results) {
+            objects.add(convertNews(each));
+        }
 
+        mRealm.close();
         return Observable.just(objects);
     }
 
     /**
      * Converts NewsItem to NewsObject to be able to pass it between threads.
+     *
      * @param newsItem to convert.
      * @return NewsObject from newsItem.
      */
@@ -165,17 +160,19 @@ public class DataManager implements Manager.DataManager {
     @Override
     public Observable<List<NewsObject>> search(String query) {
         List<NewsObject> objects = new ArrayList<>();
-        mRealm.where(NewsRealm.class)
-                .contains(NewsRealm.TITLE, query, Case.INSENSITIVE)
-                .findAll().sort(NewsRealm.PUBDATE, Sort.DESCENDING)
-                .asObservable()
-                .subscribe(newsItems -> {
-                    //noinspection Convert2streamapi
-                    for (NewsRealm each : newsItems) {
-                        objects.add(convertNews(each));
-                    }
-                });
+        Realm mRealm = Realm.getDefaultInstance();
 
+        RealmResults<NewsRealm> results = mRealm.where(NewsRealm.class)
+                .contains(NewsRealm.TITLE, query, Case.INSENSITIVE)
+                .findAll()
+                .sort(NewsRealm.PUBDATE, Sort.DESCENDING);
+
+        //noinspection Convert2streamapi
+        for (NewsRealm each : results) {
+            objects.add(convertNews(each));
+        }
+
+        mRealm.close();
         return Observable.just(objects);
     }
 }

@@ -34,8 +34,8 @@ import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.util.Log;
 
-import com.adkdevelopment.rssreader.App;
 import com.adkdevelopment.rssreader.R;
+import com.adkdevelopment.rssreader.data.managers.PrefsManager;
 import com.adkdevelopment.rssreader.data.services.FetchJobService;
 import com.adkdevelopment.rssreader.ui.base.BaseMvpPresenter;
 import com.adkdevelopment.rssreader.ui.contracts.MainContract;
@@ -65,7 +65,7 @@ public class MainPresenter extends BaseMvpPresenter<MainContract.View>
             ComponentName serviceName = new ComponentName(mContext, FetchJobService.class);
             JobInfo jobInfo = new JobInfo.Builder(JOB_ID, serviceName)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                    .setPeriodic(App.getSharedPrefManager().getSyncInterval() * DateUtils.SECOND_IN_MILLIS)
+                    .setPeriodic(new PrefsManager(mContext).getSyncInterval() * DateUtils.SECOND_IN_MILLIS)
                     .setPersisted(true)
                     .build();
             JobScheduler scheduler = (JobScheduler) mContext.getSystemService(Context.JOB_SCHEDULER_SERVICE);

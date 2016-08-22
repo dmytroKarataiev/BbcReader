@@ -52,6 +52,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         if (newsItems != null) {
             mNews = new ArrayList<>(newsItems);
         }
+        notifyDataSetChanged();
         mListener = listener;
     }
 

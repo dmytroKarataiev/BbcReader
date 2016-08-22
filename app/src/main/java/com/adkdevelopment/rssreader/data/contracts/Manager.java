@@ -24,13 +24,11 @@
 
 package com.adkdevelopment.rssreader.data.contracts;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.adkdevelopment.rssreader.data.services.RssService;
 import com.adkdevelopment.rssreader.data.local.NewsObject;
-import com.adkdevelopment.rssreader.data.local.NewsRealm;
 import com.adkdevelopment.rssreader.data.remote.Item;
+import com.adkdevelopment.rssreader.data.services.RssService;
 
 import java.util.List;
 
@@ -43,7 +41,7 @@ import rx.Observable;
  */
 public interface Manager {
 
-    void init(Context context);
+    void init();
 
     void clear();
 
@@ -71,7 +69,7 @@ public interface Manager {
 
         Observable<List<NewsObject>> findAll();
 
-        Observable<List<NewsRealm>> addBulk(List<Item> list);
+        Observable<Boolean> addBulk(List<Item> list);
 
         Observable<List<NewsObject>> search(String query);
     }

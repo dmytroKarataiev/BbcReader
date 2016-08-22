@@ -24,10 +24,8 @@
 
 package com.adkdevelopment.rssreader.data.managers;
 
-import android.content.Context;
-
-import com.adkdevelopment.rssreader.data.services.RssService;
 import com.adkdevelopment.rssreader.data.contracts.Manager;
+import com.adkdevelopment.rssreader.data.services.RssService;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -48,7 +46,7 @@ public class ApiManager implements Manager.ApiManager {
     }
 
     @Override
-    public void init(Context context) {
+    public void init() {
         initRetrofit();
         initService();
     }

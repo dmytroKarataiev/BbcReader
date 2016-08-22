@@ -29,7 +29,6 @@ import android.content.Context;
 
 import com.adkdevelopment.rssreader.data.managers.ApiManager;
 import com.adkdevelopment.rssreader.data.managers.DataManager;
-import com.adkdevelopment.rssreader.data.managers.PreferenceManager;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -40,15 +39,18 @@ import io.realm.RealmConfiguration;
  */
 public class App extends Application {
 
-    private static Context sContext;
+    private Context sContext;
 
     private static DataManager sDataManager;
     private static ApiManager sApiManager;
-    private static PreferenceManager sSharedPrefManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Uncomment to find memory leaks if any
+        // LeakCanary.install(this);
+
         sContext = getApplicationContext();
         setupRealmDefaultInstance();
     }
@@ -60,21 +62,9 @@ public class App extends Application {
     public static ApiManager getApiManager() {
         if (sApiManager == null) {
             sApiManager = new ApiManager();
-            sApiManager.init(getContext());
+            sApiManager.init();
         }
         return sApiManager;
-    }
-
-    /**
-     * Lazy initialisation of an Shared Preferences Manager.
-     * @return SharedPreferencesManager.
-     */
-    public static PreferenceManager getSharedPrefManager() {
-        if (sSharedPrefManager == null) {
-            sSharedPrefManager = new PreferenceManager();
-            sSharedPrefManager.init(getContext());
-        }
-        return sSharedPrefManager;
     }
 
     /**
@@ -84,7 +74,6 @@ public class App extends Application {
     public static DataManager getDataManager() {
         if (sDataManager == null) {
             sDataManager = new DataManager();
-            sDataManager.init(getContext());
         }
         return sDataManager;
     }
@@ -93,8 +82,8 @@ public class App extends Application {
      * Sets up database, deletes on changes.
      * We can possibly improve this part by adding migration rules in the production-ready app.
      */
-    private static void setupRealmDefaultInstance() {
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(sContext)
+    private void setupRealmDefaultInstance() {
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(getContext())
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfig);
@@ -104,7 +93,7 @@ public class App extends Application {
      * Method to get App context.
      * @return Context of the App.
      */
-    public static Context getContext() {
+    private Context getContext() {
         return sContext;
     }
 
@@ -114,6 +103,5 @@ public class App extends Application {
     public void clear() {
         sApiManager.clear();
         sDataManager.clear();
-        sSharedPrefManager.clear();
     }
 }

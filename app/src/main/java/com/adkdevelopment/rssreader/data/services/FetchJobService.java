@@ -39,11 +39,9 @@ import android.util.Log;
 
 import com.adkdevelopment.rssreader.App;
 import com.adkdevelopment.rssreader.R;
-import com.adkdevelopment.rssreader.data.local.NewsRealm;
+import com.adkdevelopment.rssreader.data.managers.PrefsManager;
 import com.adkdevelopment.rssreader.data.remote.Rss;
 import com.adkdevelopment.rssreader.ui.MainActivity;
-
-import java.util.List;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -62,7 +60,6 @@ public class FetchJobService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-
         // fetches news from bbc
         App.getApiManager().getNewsService().getNews()
                 .subscribeOn(Schedulers.io())
@@ -98,7 +95,7 @@ public class FetchJobService extends JobService {
         App.getDataManager().addBulk(mRss.getChannel().getItem())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<NewsRealm>>() {
+                .subscribe(new Subscriber<Boolean>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -109,7 +106,7 @@ public class FetchJobService extends JobService {
                     }
 
                     @Override
-                    public void onNext(List<NewsRealm> itemList) {
+                    public void onNext(Boolean added) {
                     }
                 });
     }
@@ -124,13 +121,15 @@ public class FetchJobService extends JobService {
      */
     private void sendNotification() {
 
+        PrefsManager prefsManager = new PrefsManager(getBaseContext());
+
         Context context = getApplicationContext();
         final String NOTIFICATION_GROUP = "notif_group";
         final int NOTIFICATION_ID_1 = 101;
 
-        if (App.getSharedPrefManager().receiveNotifications()) {
+        if (prefsManager.receiveNotifications()) {
             //checking the last update and notify if it's the first of the day
-            if (System.currentTimeMillis() - App.getSharedPrefManager().getLastNotification()
+            if (System.currentTimeMillis() - prefsManager.getLastNotification()
                     >= DateUtils.DAY_IN_MILLIS) {
 
                 Intent intent = new Intent(context, MainActivity.class);
@@ -160,7 +159,7 @@ public class FetchJobService extends JobService {
                 NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
                 managerCompat.notify(NOTIFICATION_ID_1, builder.build());
 
-                App.getSharedPrefManager().setLastNotification();
+                prefsManager.setLastNotification();
             }
 
         }

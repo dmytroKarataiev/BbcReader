@@ -160,6 +160,7 @@ public class ListFragment extends BaseFragment
 
     /**
      * Creates an Observer for an EditText Subscription.
+     *
      * @return Observer which fetches an update.
      */
     private Observer<TextViewTextChangeEvent> getSearchObserver() {
@@ -217,7 +218,6 @@ public class ListFragment extends BaseFragment
     public void showData(List<NewsObject> itemList) {
         mListEmpty.setVisibility(View.GONE);
         mAdapter.setTasks(itemList, this);
-        mAdapter.notifyDataSetChanged();
         mRecyclerView.scrollToPosition(mPosition);
     }
 
@@ -226,7 +226,6 @@ public class ListFragment extends BaseFragment
         mListEmpty.setText(getString(R.string.recyclerview_empty_text));
         mListEmpty.setVisibility(View.VISIBLE);
         mAdapter.setTasks(null, null);
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
