@@ -118,10 +118,11 @@ public class DetailActivity extends BaseActivity implements DetailActivityContra
         PagerAdapter mAdapter = new PagerAdapter(getSupportFragmentManager());
         mAdapter.setNewsItems(itemList);
         mPager.setAdapter(mAdapter);
+        int position = getIntent().getIntExtra(NewsRealm.NEWS_POSITION, 0);
 
         // zoom effect on swipe
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
-        mPager.setCurrentItem(getIntent().getIntExtra(NewsRealm.NEWS_POSITION, 0));
+        mPager.setCurrentItem(position);
     }
 
     @Override

@@ -36,12 +36,12 @@ import com.adkdevelopment.rssreader.data.contracts.Manager;
  */
 public class PrefsManager implements Manager.PrefsManager {
 
-    private final SharedPreferences sPref;
+    private final SharedPreferences mPref;
     private final Context mContext;
 
     public PrefsManager(Context context) {
         mContext = context;
-        sPref = android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
+        mPref = android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
     @Override
@@ -50,13 +50,12 @@ public class PrefsManager implements Manager.PrefsManager {
 
     @Override
     public void clear() {
-        sPref.edit().clear().apply();
-
+        mPref.edit().clear().apply();
     }
 
     @Override
     public SharedPreferences getSharedPrefs() {
-        return sPref;
+        return mPref;
     }
 
     /**

@@ -39,7 +39,7 @@ import io.realm.RealmConfiguration;
  */
 public class App extends Application {
 
-    private Context sContext;
+    private Context mContext;
 
     private static DataManager sDataManager;
     private static ApiManager sApiManager;
@@ -51,7 +51,7 @@ public class App extends Application {
         // Uncomment to find memory leaks if any
         // LeakCanary.install(this);
 
-        sContext = getApplicationContext();
+        mContext = getApplicationContext();
         setupRealmDefaultInstance();
     }
 
@@ -94,7 +94,7 @@ public class App extends Application {
      * @return Context of the App.
      */
     private Context getContext() {
-        return sContext;
+        return mContext;
     }
 
     /**

@@ -30,7 +30,6 @@
     <string name="fragment_error">Error somewhere</string>
 
     <!-- SharedTransitions -->
-    <string name="transition_card" translatable="false">card</string>
     <string name="description_news">Thumbnail for the news item</string>
     <string name="title_main">Reader</string>
 

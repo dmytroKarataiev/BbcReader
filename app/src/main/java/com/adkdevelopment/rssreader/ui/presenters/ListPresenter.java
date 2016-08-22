@@ -86,12 +86,11 @@ public class ListPresenter
                     }
 
                     @Override
-                    public void onNext(List<NewsObject> realmObjects) {
-                        if (realmObjects != null && realmObjects.size() > 0) {
-                            getMvpView().showData(realmObjects);
+                    public void onNext(List<NewsObject> results) {
+                        if (results != null && results.size() > 0) {
+                            getMvpView().showData(results);
                         } else {
                             getMvpView().showEmpty();
-                            fetchData();
                         }
                     }
                 }));
@@ -123,12 +122,11 @@ public class ListPresenter
                         }
 
                         @Override
-                        public void onNext(List<NewsObject> realmObjects) {
-                            if (realmObjects != null && realmObjects.size() > 0) {
-                                getMvpView().showData(realmObjects);
+                        public void onNext(List<NewsObject> results) {
+                            if (results != null && results.size() > 0) {
+                                getMvpView().showData(results);
                             } else {
                                 getMvpView().showEmpty();
-                                fetchData();
                             }
                         }
                     }));
