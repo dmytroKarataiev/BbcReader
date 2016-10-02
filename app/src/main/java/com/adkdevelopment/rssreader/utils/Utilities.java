@@ -97,9 +97,11 @@ public class Utilities {
         newsItem.setPubDate(convertDate(item.getPubDate()));
         newsItem.setLink(item.getLink());
         newsItem.setTitle(item.getTitle());
-        newsItem.setThumbnail(item.getThumbnail().getUrl());
-        newsItem.setWidth(Integer.parseInt(item.getThumbnail().getWidth()));
-        newsItem.setHeight(Integer.parseInt(item.getThumbnail().getHeight()));
+        if (item.getThumbnail() != null) {
+            newsItem.setThumbnail(item.getThumbnail().getUrl());
+            newsItem.setWidth(Integer.parseInt(item.getThumbnail().getWidth()));
+            newsItem.setHeight(Integer.parseInt(item.getThumbnail().getHeight()));
+        }
         return newsItem;
     }
 

@@ -29,7 +29,7 @@ apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         minSdkVersion 16
@@ -58,7 +58,7 @@ android {
 }
 
 ext {
-    compatVersion = "24.2.0"
+    compatVersion = "24.2.1"
     retrofitVersion = "2.1.0"
     butterknifeVersion = "8.1.0"
 }

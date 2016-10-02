@@ -46,7 +46,7 @@ public class Item {
     @Element
     private String link;
 
-    @Element
+    @Element(required = false)
     private Thumbnail thumbnail;
 
     public Thumbnail getThumbnail() {

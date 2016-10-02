@@ -117,7 +117,7 @@ public class FetchJobService extends JobService {
     }
 
     /**
-     * Raises a notification with a biggest earthquake with each sync
+     * Raises a notification each day on news update.
      */
     private void sendNotification() {
 
