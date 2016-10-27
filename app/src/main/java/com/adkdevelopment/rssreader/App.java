@@ -29,7 +29,9 @@ import android.content.Context;
 
 import com.adkdevelopment.rssreader.data.managers.ApiManager;
 import com.adkdevelopment.rssreader.data.managers.DataManager;
+import com.crashlytics.android.Crashlytics;
 
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -47,6 +49,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         // Uncomment to find memory leaks if any
         // LeakCanary.install(this);

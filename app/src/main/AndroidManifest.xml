@@ -76,7 +76,9 @@
             android:name=".data.services.FetchJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true" />
-
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ca849bf6cdd88797c30d095ddef12b71cc2ce64c" />
     </application>
 
 </manifest>
