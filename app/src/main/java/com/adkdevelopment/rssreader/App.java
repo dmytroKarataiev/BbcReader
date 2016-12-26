@@ -25,7 +25,6 @@
 package com.adkdevelopment.rssreader;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.adkdevelopment.rssreader.data.managers.ApiManager;
 import com.adkdevelopment.rssreader.data.managers.DataManager;
@@ -41,20 +40,19 @@ import io.realm.RealmConfiguration;
  */
 public class App extends Application {
 
-    private Context mContext;
-
     private static DataManager sDataManager;
     private static ApiManager sApiManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, new Crashlytics());
+        }
 
         // Uncomment to find memory leaks if any
         // LeakCanary.install(this);
-
-        mContext = getApplicationContext();
         setupRealmDefaultInstance();
     }
 
@@ -86,18 +84,10 @@ public class App extends Application {
      * We can possibly improve this part by adding migration rules in the production-ready app.
      */
     private void setupRealmDefaultInstance() {
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(getContext())
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(getApplicationContext())
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfig);
-    }
-
-    /**
-     * Method to get App context.
-     * @return Context of the App.
-     */
-    private Context getContext() {
-        return mContext;
     }
 
     /**
