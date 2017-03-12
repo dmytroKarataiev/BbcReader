@@ -30,7 +30,7 @@ apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "24.0.3"
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         minSdkVersion 16
@@ -62,13 +62,15 @@ android {
 }
 
 ext {
-    compatVersion = "25.1.0"
-    retrofitVersion = "2.1.0"
-    butterknifeVersion = "8.4.0"
+    compatVersion = "25.2.0"
+    retrofitVersion = "2.2.0"
+    butterknifeVersion = "8.5.1"
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':license-release')
+
     testCompile 'junit:junit:4.12'
 
     // find the memory leak

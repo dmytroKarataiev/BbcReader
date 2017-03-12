@@ -35,6 +35,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.adkdevelopment.license.ui.LicenseActivity;
 import com.adkdevelopment.rssreader.R;
 import com.adkdevelopment.rssreader.data.local.NewsObject;
 import com.adkdevelopment.rssreader.data.local.NewsRealm;
@@ -154,6 +155,9 @@ public class MainActivity extends BaseActivity
         switch (id) {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.action_license:
+                startActivity(new Intent(this, LicenseActivity.class));
                 return true;
         }
 
